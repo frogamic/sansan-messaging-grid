@@ -1,5 +1,5 @@
 {
-  "name" : "netrunner slack",
+  "name" : "netrunner-slack",
   "description" : "Slack webhook to respond with Netrunner card details.",
   "version" : "0.0.0",
   "author" : "Dominic Shelton <frogamic@gmail.com>",
