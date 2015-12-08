@@ -4,14 +4,17 @@
   "version" : "0.0.0",
   "author" : "Dominic Shelton <frogamic@gmail.com>",
   "contributors" : [],
-  "scripts" : [
+  "scripts" : {
     "start" : "node webhook.js"
-  ]
+  },
   "main" : "webhook.js",
-  "dependencies" : [
+  "dependencies" : {
     "express" : "4.13.x",
     "request" : "2.67.x"
-  ],
-  "repository" : {"type": "git", "url": "git://github.com/frogamic/netrunner-slack"},
+  },
+  "repository" : {
+    "type": "git",
+    "url": "git://github.com/frogamic/netrunner-slack"
+  },
   "license" : "LGPL"
 }
