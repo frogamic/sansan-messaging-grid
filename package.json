@@ -28,7 +28,10 @@
   "directories": {
     "test": "tests"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
   "keywords": [
     "Netrunner",
     "Slack"
