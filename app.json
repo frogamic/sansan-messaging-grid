@@ -1,0 +1,17 @@
+{
+  "name": "Netrunner Slack",
+  "description": "Replies to Slack messages with details for Netrunner cards.",
+  "keywords": [
+    "Netrunner",
+    "Slack"
+  ],
+  "repository": "https://github.com/frogamic/netrunner-slack",
+  "env": {
+    "MAX_HITS": {
+      "description": "The maximum number of cards to return when several match the search.",
+      "value": "40"
+    }
+  },
+  "image": "heroku/nodejs"
+}
+

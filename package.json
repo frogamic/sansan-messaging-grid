@@ -1,0 +1,17 @@
+{
+  "name" : "netrunner slack",
+  "description" : "Slack webhook to respond with Netrunner card details.",
+  "version" : "0.0.0",
+  "author" : "Dominic Shelton <frogamic@gmail.com>",
+  "contributors" : [],
+  "scripts" : [
+    "start" : "node webhook.js"
+  ]
+  "main" : "webhook.js",
+  "dependencies" : [
+    "express" : "4.13.x",
+    "request" : "2.67.x"
+  ],
+  "repository" : {"type": "git", "url": "git://github.com/frogamic/netrunner-slack"},
+  "license" : "LGPL"
+}
