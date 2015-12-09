@@ -2,12 +2,12 @@ var express = require('express');
 
 var port = process.env.PORT || 3000;
 
-var app = express();
+var app = module.exports = express();
 
 app.post('/', function (req, res) {
     res.json({text:'Hello World'});
 });
 
 app.listen(port);
-console.info('Listening on port ' + port);
+console.info('Express listening on port ' + port);
 

@@ -5,7 +5,8 @@
   "author": "Dominic Shelton <frogamic@gmail.com>",
   "contributors": [],
   "scripts": {
-    "start": "nf start"
+    "start": "nf start",
+    "test": "mocha tests/tests.js"
   },
   "main": "webhook.js",
   "dependencies": {
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "chai": "*",
+    "chai-http": "^1.0.0",
     "mocha": "*"
   },
   "keywords": [
