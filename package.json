@@ -11,8 +11,10 @@
   "main": "webhook.js",
   "dependencies": {
     "body-parser": "1.14.1",
+    "exact": "^0.1.0",
     "express": "4.13.x",
     "foreman": "1.4.1",
+    "node-schedule": "^0.6.0",
     "request": "2.67.x"
   },
   "engines": {
