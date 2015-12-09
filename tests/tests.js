@@ -88,3 +88,22 @@ describe('Card title formatting', function() {
     });
 });
 
+describe('Search string finding', function() {
+    it('should always return an array', function (done) {
+        expect(webhook.findSearchStrings('guize should I use [desperado] or [box e]')).to.be.an('array');
+        expect(webhook.findSerachStrings('I\'m not searching nrdb')).to.be.an('array');
+        done();
+    });
+    it('should find all items within square brackets', function (done) {
+        var hits = webhook.findSearchStrings('[house of knives], [nisei] and [fetal ai] are jinteki agendas');
+        expect(hits).to.have.length.of(3);
+        expect(hits).to.equal(['house of knives', 'nisei', 'fetal ai']);
+        done();
+    });
+    it('should find nothing when no square brackets are present', function (done) {
+        var hits = webhook.findSearchStrings('Something unrelated');
+        expect(hits).to.have.length(0);
+        done();
+    });
+});
+
