@@ -18,9 +18,12 @@ describe('NetrunnerDB export', function () {
         expect(nrdb.cards).to.be.null;
         done();
     });
+    it('should be initializable', function () {
+        this.timeout(6000);
+        return nrdb.init();
+    });
     it('should contain cards after initializing', function (done) {
-        nrdb.init();
-        nrdb.cards.should.be.an('array');
+        expect(nrdb.cards).to.be.an('array');
         done();
     });
     it('should contain some known cards', function (done) {
@@ -30,6 +33,7 @@ describe('NetrunnerDB export', function () {
         nrdb.cards.find(function (c) {
             return c.code === '06088';
         }).title.should.equal('Executive Boot Camp');
+        done();
     });
 });
 
