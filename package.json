@@ -6,10 +6,11 @@
   "contributors": [],
   "scripts": {
     "start": "nf start",
-    "test": "mocha tests/tests.js"
+    "test": "mocha tests/*"
   },
   "main": "webhook.js",
   "dependencies": {
+    "body-parser": "1.14.1",
     "express": "4.13.x",
     "foreman": "1.4.1",
     "request": "2.67.x"
@@ -27,11 +28,11 @@
   },
   "homepage": "https://github.com/frogamic/netrunner-slack#readme",
   "directories": {
-    "test": "tests"
+    "test": "./tests"
   },
   "devDependencies": {
     "chai": "*",
-    "chai-http": "^1.0.0",
+    "chai-http": "*",
     "mocha": "*"
   },
   "keywords": [
