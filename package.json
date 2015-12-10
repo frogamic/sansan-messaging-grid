@@ -15,7 +15,8 @@
     "express": "4.13.x",
     "foreman": "1.4.1",
     "node-schedule": "^0.6.0",
-    "request": "2.67.x"
+    "request": "2.67.x",
+    "search-index": "0.6.14"
   },
   "engines": {
     "node": "5.1.1"
