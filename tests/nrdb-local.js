@@ -19,7 +19,7 @@ describe('NetrunnerDB object', function () {
         done();
     });
     it('should be initializable', function () {
-        this.timeout(30000);
+        this.timeout(60000);
         return nrdb.init(cards);
     });
     it('should contain some known cards', function () {
