@@ -1,5 +1,7 @@
 var chai = require('chai');
 
+chai.use(require('chai-as-promised'));
+
 var expect = chai.expect;
 var should = chai.should();
 
@@ -23,10 +25,14 @@ describe('NetrunnerDB object', function () {
         return nrdb.init(cards);
     });
     it('should contain some known cards', function () {
-        return nrdb.getCardByCode('06088');
+        return expect(nrdb.getCardByCode('06088'))
+            .to.eventually.have.property('title')
+            .that.deep.equals("Executive Boot Camp");
     });
     it('should find cards by title', function () {
-        return nrdb.getCardByTitle('NAPD');
+        return expect(nrdb.getCardByTitle('NAPD'))
+            .to.eventually.have.property('code')
+            .that.deep.equals('04119');
     });
 });
 
