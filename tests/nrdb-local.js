@@ -21,10 +21,10 @@ describe('NetrunnerDB object', function () {
         done();
     });
     it('should be initializable', function () {
-        this.timeout(60000);
+        this.timeout(10000);
         return nrdb.init(cards);
     });
-    it('should contain some known cards', function () {
+    it('should find cards by code', function () {
         return expect(nrdb.getCardByCode('06088'))
             .to.eventually.have.property('title')
             .that.deep.equals("Executive Boot Camp");
@@ -33,6 +33,16 @@ describe('NetrunnerDB object', function () {
         return expect(nrdb.getCardByTitle('NAPD'))
             .to.eventually.have.property('code')
             .that.deep.equals('04119');
+    });
+    it('should find cards by partial title', function () {
+        return expect(nrdb.getCardByTitle('hok'))
+            .to.eventually.have.property('code')
+            .that.deep.equals('02095');
+    });
+    it('should find cards by acronym', function () {
+        return expect(nrdb.getCardByTitle('etf'))
+            .to.eventually.have.property('code')
+            .that.deep.equals('01054');
     });
 });
 
