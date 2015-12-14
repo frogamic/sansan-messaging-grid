@@ -1,14 +1,14 @@
 'use strict';
 var request = require('request');
 var schedule = require('node-schedule');
-var si = require('search-index')({
-    deletable:false,
-    fieldsToStore:['id', 'title'],
-    nGramLength: {gte: 1, lte: 3}
-});
+var FuzzySearch = require('fuzzysearch-js');
+var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
+var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
+var WordCountFS = require('fuzzysearch-js/js/modules/WordCountFS');
 
 var netrunnerdbURL = 'http://netrunnerdb.com/api/cards/';
 var cards = {};
+var fuzzySearch;
 var scheduledUpdate;
 var initPromise;
 var indexPromise;
@@ -25,7 +25,7 @@ function getCardByCode (code) {
             if (cards[code]) {
                 resolve(cards[code]);
             } else {
-                reject();
+                reject(new Error('No hits'));
             }
         });
     });
@@ -33,18 +33,21 @@ function getCardByCode (code) {
 
 function getCardByTitle (text) {
     return new Promise (function (resolve, reject) {
-        indexPromise.then(function () {
-            si.search({query:  {title: [text]}}, function (err, searchResults) {
-                if (err) {
-                    reject(err);
+        indexPromise.then(function (cardArray) {
+            var results = fuzzySearch.search(text);
+            if (results) {
+                resolve(results[0].value);
+            }else{
+                var acronym = new RegExp(text.replace(/\W/g, '').replace(/(.)/g, '\\b$1.*?'), 'i');
+                var result = cardArray.find(function (e) {
+                    return e.title.match(acronym);
+                });
+                if (result) {
+                    resolve(result);
                 } else {
-                    if(searchResults.totalHits > 0) {
-                        resolve(cards[searchResults.hits[0].code]);
-                    } else {
-                        reject('no hits');
-                    }
+                    reject(new Error('No hits'));
                 }
-            });
+            }
         });
     });
 }
@@ -76,18 +79,16 @@ function init (cardArray) {
         initPromise.then(function(cardArray) {
             for (var i = 0; i < cardArray.length; i++) {
                 cards[cardArray[i].code] = cardArray[i];
-                cards[cardArray[i].code].id = parseInt(cardArray[i].code);
             }
-            si.empty();
-            si.add(cardArray, {}, function (error) {
-                if (!error){
-                    console.log('Cards added to search-index');
-                    resolve();
-                } else {
-                    console.error('Failed to add cards to search-index');
-                    reject (error);
-                }
+            fuzzySearch = new FuzzySearch(cardArray, {
+                'caseSensitive': false,
+                'termPath': 'title',
+                'minimumScore': 300
             });
+            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 3, 'factor': 3}));
+            fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 3}));
+            fuzzySearch.addModule(WordCountFS({'maxWordTolerance': 3, 'factor': 1}));
+            resolve(cardArray);
         }, function (error) {
             reject (error);
         });
