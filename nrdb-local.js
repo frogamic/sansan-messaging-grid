@@ -87,7 +87,7 @@ function init (cardArray) {
                 'termPath': 'title',
                 'minimumScore': 200
             });
-            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 10, 'factor': 1}));
+            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 6, 'factor': 1}));
             fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 2}));
             resolve(cardArray);
         }, function (error) {
