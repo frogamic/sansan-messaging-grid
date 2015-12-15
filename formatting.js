@@ -25,7 +25,7 @@ function influenceDots (influence) {
 }
 
 exports.formatDecklist = (decklist) => {
-    var o = {text: '', attachments:[{}]};
+    var o = {text: '', attachments:[{mrkdwn_in: ['text', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
     var decksize = 0;
@@ -36,6 +36,9 @@ exports.formatDecklist = (decklist) => {
         for (var t in headings[f]) {
             var type = headings[f][t];
             if (decklist.cards[type]) {
+                if (t) {
+                    fields[f].value += '\n';
+                }
                 fields[f].value += this.formatTitle(type);
                 for (var i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
