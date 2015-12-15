@@ -1,4 +1,10 @@
+'use strict';
 var colours = require('./colours.json');
+
+var headings = [
+    ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
+    ['Icebreaker', 'Program', 'Ice']
+];
 
 var stats = [
     ['baselink', ':_link:'],
@@ -9,6 +15,55 @@ var stats = [
     ['advancementcost', ':_advance:'],
     ['agendapoints', ':_agenda:']
 ];
+
+function influenceDots (influence) {
+    var dots = '';
+    for (var i = 0; i < influence; i++) {
+        dots += '•';
+    }
+    return dots;
+}
+
+exports.formatDecklist = (decklist) => {
+    console.info('formatting');
+    var o = {text: '', attachments:[{}]};
+    var faction = decklist.cards.Identity[0].faction;
+    var usedInfluence = 0;
+    var decksize = 0;
+    var fields = [];
+    o.text = this.formatTitle(decklist.title, decklist.url);
+    console.info('iterating through fields');
+    for (var f in headings) {
+        fields[f] = {title: '', value: '', short: true};
+        console.info(fields);
+        for (var t in headings[f]) {
+            var type = headings[f][t];
+            console.info(type);
+            if (decklist.cards[type]) {
+                fields[f].value += this.formatTitle(type);
+                console.info(fields);
+                for (var i in decklist.cards[type]) {
+                    var card = decklist.cards[type][i];
+                    fields[f].value += '\n' + card.quantity;
+                    fields[f].value += ' × ' + card.card.title;
+                    decksize += card.quantity;
+                    if (card.card.faction !== faction) {
+                        var inf = card.quantity * card.card.factioncost;
+                        fields[f].value += influenceDots(inf);
+                        usedInfluence += inf;
+                    }
+                }
+            }
+        }
+    }
+    o.attachments[0].fields = fields;
+    o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].title);
+    o.attachments[0].text += '\nDeck: ' + decksize + ' (';
+    o.attachments[0].text +=  decklist.cards.Identity[0].minimumdecksize;
+    o.attachments[0].text += ') Influence: ' + usedInfluence + '/';
+    o.attachments[0].text += decklist.cards.Identity[0].influencelimit;
+    return o;
+};
 
 exports.formatCards = (cards) => {
     var o = {text:'', attachments:[]};
@@ -32,9 +87,7 @@ exports.formatCards = (cards) => {
         }
         a.pretext += ' - :_' + faction + ':';
         if (cards[i].factioncost) {
-            for (var j = 0; j < cards[i].factioncost; j++) {
-                a.pretext += '•';
-            }
+            a.pretext += influenceDots(cards[i].factioncost);
         }
         a.pretext += '\n';
         var first = true;
