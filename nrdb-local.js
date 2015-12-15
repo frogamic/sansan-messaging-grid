@@ -42,11 +42,7 @@ function getCardByTitle (text) {
                 var result = cardArray.find(function (e) {
                     return e.title.match(acronym);
                 });
-                if (result) {
-                    resolve(result);
-                } else {
-                    reject(new Error('No hits'));
-                }
+                resolve(result);
             }
         });
     });
