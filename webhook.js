@@ -56,7 +56,7 @@ app.post('/decklist', function (req, res) {
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     }
-    var match = req.body.text.match(/netrunnerdb.com\/\w\w\/decklist\/(\d+)/);
+    var match = req.body.text.match(/(?:netrunnerdb.com\/\w\w\/decklist\/)?(\d+)/);
     if (match) {
         var id = match[1];
         nrdb.getDecklist(id).then(function (decklist) {
@@ -68,7 +68,7 @@ app.post('/decklist', function (req, res) {
     } else {
         res.send('');
     }
-}
+});
 
 app.post('/', function (req, res) {
     var searches = [];
