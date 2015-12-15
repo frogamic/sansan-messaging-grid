@@ -35,13 +35,13 @@ function getCardByTitle (text) {
         indexPromise.then(function (cardArray) {
             var results = fuzzySearch.search(text);
             if (results) {
-                for (var i in results) {
-                    var details = '   ';
-                    for (var j in results[i].details) {
-                        details += results[i].details[j].name + ': ' + results[i].details[j].score + ' ';
-                    }
-                    console.info(i +': ' + results[i].value.title + ' score: ' + results[i].score + '\t\t' + details);
-                }
+                // for (var i in results) {
+                //     var details = '   ';
+                //     for (var j in results[i].details) {
+                //         details += results[i].details[j].name + ': ' + results[i].details[j].score + ' ';
+                //     }
+                //     console.info(i +': ' + results[i].value.title + ' score: ' + results[i].score + '\t\t' + details);
+                // }
                 resolve(results[0].value);
             }else{
                 var acronym = new RegExp(text.replace(/\W/g, '').replace(/(.)/g, '\\b$1.*?'), 'i');
