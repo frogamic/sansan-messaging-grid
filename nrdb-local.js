@@ -4,7 +4,6 @@ var schedule = require('node-schedule');
 var FuzzySearch = require('fuzzysearch-js');
 var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
 var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
-var WordCountFS = require('fuzzysearch-js/js/modules/WordCountFS');
 
 var netrunnerdbURL = 'http://netrunnerdb.com/api/cards/';
 var cards = {};
@@ -36,6 +35,13 @@ function getCardByTitle (text) {
         indexPromise.then(function (cardArray) {
             var results = fuzzySearch.search(text);
             if (results) {
+                for (var i in results) {
+                    var details = '   ';
+                    for (var j in results[i].details) {
+                        details += results[i].details[j].name + ': ' + results[i].details[j].score + ' ';
+                    }
+                    console.info(i +': ' + results[i].value.title + ' score: ' + results[i].score + '\t\t' + details);
+                }
                 resolve(results[0].value);
             }else{
                 var acronym = new RegExp(text.replace(/\W/g, '').replace(/(.)/g, '\\b$1.*?'), 'i');
@@ -79,11 +85,10 @@ function init (cardArray) {
             fuzzySearch = new FuzzySearch(cardArray, {
                 'caseSensitive': false,
                 'termPath': 'title',
-                'minimumScore': 300
+                'minimumScore': 200
             });
-            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 3, 'factor': 3}));
-            fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 3}));
-            fuzzySearch.addModule(WordCountFS({'maxWordTolerance': 3, 'factor': 1}));
+            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 10, 'factor': 1}));
+            fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 2}));
             resolve(cardArray);
         }, function (error) {
             reject (error);
