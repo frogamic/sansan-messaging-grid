@@ -3,7 +3,7 @@ var colours = require('./colours.json');
 
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
-    ['Icebreaker', 'Program', 'Ice']
+    ['Icebreaker', 'Program', 'ICE']
 ];
 
 var stats = [
@@ -30,7 +30,7 @@ exports.formatDecklist = (decklist) => {
     var usedInfluence = 0;
     var decksize = 0;
     var fields = [];
-    o.text = this.formatTitle(decklist.title, decklist.url);
+    o.text = this.formatTitle(decklist.name, decklist.url);
     for (var f in headings) {
         fields[f] = {title: '', value: '', short: true};
         for (var t in headings[f]) {
