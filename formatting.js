@@ -37,7 +37,7 @@ exports.formatDecklist = (decklist) => {
             var type = headings[f][t];
             if (decklist.cards[type]) {
                 if (t) {
-                    fields[f].value += '\n';
+                    fields[f].value += '\n\n';
                 }
                 fields[f].value += this.formatTitle(type);
                 for (var i in decklist.cards[type]) {
