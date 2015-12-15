@@ -56,6 +56,11 @@ function getDecklist (id) {
                         quantity: values[i].quantity, card: values[i].card
                     });
                 }
+                for (var type in decklist.cards) {
+                    decklist.cards[type].sort(function (a, b) {
+                        return a.card.title.localeCompare(b.card.title);
+                    });
+                }
                 resolve(decklist);
             }, function (err) {
                 console.log(err);
