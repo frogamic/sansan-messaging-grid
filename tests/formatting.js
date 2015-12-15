@@ -96,24 +96,24 @@ describe('Card title formatting', function() {
 describe('Card formatting', function () {
     it('should correctly format Identities', function (done) {
         expect(formatting.formatCards([testCards[0]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [ { pretext: "*\u200bIdentity\u200b*: Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" } ]
+            text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" } ]
         });
         expect(formatting.formatCards([testCards[1]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>", attachments: [ { pretext: "*\u200bIdentity\u200b*: Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
+            text: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
         });
         done();
     });
 
     it('should correctly format hardware', function (done) {
         expect(formatting.formatCards([testCards[2]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/05037|*\u200b◆ Logos\u200b*>", attachments: [ { pretext: "*\u200bHardware\u200b*: Console - :criminal:••\n4:credit:", text: "+:1mu:\nYour maximum hand size is increased by 1.\nWhenever the Corp scores an agenda, you may search your stack for a card and add it to your grip. Shuffle your stack.\nLimit 1 *\u200bconsole\u200b* per player.", mrkdwn_in: [ "pretext", "text" ], color: "#0066cc" } ]
+            text: "<http://netrunnerdb.com/en/card/05037|*\u200b◆ Logos\u200b*>", attachments: [ { pretext: "*\u200bHardware:\u200b* Console - :criminal:••\n4:credit:", text: "+:1mu:\nYour maximum hand size is increased by 1.\nWhenever the Corp scores an agenda, you may search your stack for a card and add it to your grip. Shuffle your stack.\nLimit 1 *\u200bconsole\u200b* per player.", mrkdwn_in: [ "pretext", "text" ], color: "#0066cc" } ]
         });
         done();
     });
 
     it('should correctly format programs', function (done) {
         expect(formatting.formatCards([testCards[3]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/01013|*\u200bWyrm\u200b*>", attachments: [ { pretext: "*\u200bProgram\u200b*: Icebreaker - AI - :anarch:••\n1:credit: - :1mu: - 1 str", text: "3:credit:: Break ice subroutine on a piece of ice with 0 or less strength.\n1:credit:: Ice has −1 strength.\n1:credit:: +1 strength.", mrkdwn_in: [ "pretext", "text" ], color: "#ff531a" } ]
+            text: "<http://netrunnerdb.com/en/card/01013|*\u200bWyrm\u200b*>", attachments: [ { pretext: "*\u200bProgram:\u200b* Icebreaker - AI - :anarch:••\n1:credit: - :1mu: - 1 str", text: "3:credit:: Break ice subroutine on a piece of ice with 0 or less strength.\n1:credit:: Ice has −1 strength.\n1:credit:: +1 strength.", mrkdwn_in: [ "pretext", "text" ], color: "#ff531a" } ]
             });
         done();
     });
@@ -140,7 +140,7 @@ describe('Card formatting', function () {
 
     it('should correctly format assets', function (done) {
         expect(formatting.formatCards([testCards[7]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/07009|*\u200b◆ Mark Yale\u200b*>","attachments":[{"pretext":"*\u200bAsset\u200b*: Executive - :weyland:•\n1:rez: - 3:trash:","text":"Whenever you spend an agenda counter, gain 1:credit:.\n:trash: or *\u200bany agenda counter\u200b*: Gain 2:credit:.","mrkdwn_in":["pretext","text"],"color":"#287c64"}]
+            "text":"<http://netrunnerdb.com/en/card/07009|*\u200b◆ Mark Yale\u200b*>","attachments":[{"pretext":"*\u200bAsset:\u200b* Executive - :weyland:•\n1:rez: - 3:trash:","text":"Whenever you spend an agenda counter, gain 1:credit:.\n:trash: or *\u200bany agenda counter\u200b*: Gain 2:credit:.","mrkdwn_in":["pretext","text"],"color":"#287c64"}]
         });
         done();
     });
@@ -161,7 +161,7 @@ describe('Card formatting', function () {
 
     it('should correctly format ICE', function (done) {
         expect(formatting.formatCards([testCards[10]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/01088|*\u200bData Raven\u200b*>","attachments":[{"pretext":"*\u200bICE\u200b*: Sentry - Tracer - Observer - :nbn:••\n4:rez: - 4 str","text":"When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.\n*\u200bHosted power counter:\u200b* Give the Runner 1 tag.\n:subroutine: *\u200bTrace³\u200b*– If successful, place 1 power counter on Data Raven.","mrkdwn_in":["pretext","text"],"color":"#ffb900"}]
+            "text":"<http://netrunnerdb.com/en/card/01088|*\u200bData Raven\u200b*>","attachments":[{"pretext":"*\u200bICE:\u200b* Sentry - Tracer - Observer - :nbn:••\n4:rez: - 4 str","text":"When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.\n*\u200bHosted power counter:\u200b* Give the Runner 1 tag.\n:subroutine: *\u200bTrace³\u200b*– If successful, place 1 power counter on Data Raven.","mrkdwn_in":["pretext","text"],"color":"#ffb900"}]
         });
         done();
     });
@@ -169,8 +169,8 @@ describe('Card formatting', function () {
     it('should correctly format multiple cards', function (done) {
         expect(formatting.formatCards(testCards.slice(0,2))).to.deep.equal({
             text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [
-                { pretext: "*\u200bIdentity\u200b*: Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" },
-                { pretext: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>\n*\u200bIdentity\u200b*: Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
+                { pretext: "*\u200bIdentity:\u200b* Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" },
+                { pretext: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>\n*\u200bIdentity:\u200b* Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
         });
         done();
     });

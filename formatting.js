@@ -24,9 +24,11 @@ exports.formatCards = (cards) => {
         } else {
             a.pretext = this.formatTitle(title, cards[i].url) + '\n';
         }
-        a.pretext += '*\u200b' + cards[i].type + '\u200b*';
+        a.pretext += '*\u200b' + cards[i].type;
         if (cards[i].subtype ) {
-            a.pretext += ': ' + cards[i].subtype;
+            a.pretext += ':\u200b* ' + cards[i].subtype;
+        } else {
+            a.pretext += '\u200b*';
         }
         a.pretext += ' - :' + faction + ':';
         if (cards[i].factioncost) {
@@ -59,7 +61,7 @@ exports.formatCards = (cards) => {
                 first = false;
             }
         }
-        a.pretext = a.pretext.replace(/(\d|X):mu:/gi, function (x) {
+        a.pretext = a.pretext.replace(/(\d|X)\s*:mu:/gi, function (x) {
             return x.replace(/(.).*/, ':$1mu:').toLowerCase();
         });
         a.color = colours[faction];
