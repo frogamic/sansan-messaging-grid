@@ -26,7 +26,7 @@ function influenceDots (influence) {
 
 exports.formatDecklist = (decklist) => {
     var o = {text: '', attachments:[{}]};
-    var faction = decklist.cards.Identity[0].cards.faction;
+    var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
     var decksize = 0;
     var fields = [];
@@ -52,11 +52,11 @@ exports.formatDecklist = (decklist) => {
         }
     }
     o.attachments[0].fields = fields;
-    o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].cards.title);
+    o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].card.title);
     o.attachments[0].text += '\nDeck: ' + decksize + ' (';
-    o.attachments[0].text +=  decklist.cards.Identity[0].cards.minimumdecksize;
-    o.attachments[0].text += ') Influence: ' + usedInfluence + '/';
-    o.attachments[0].text += decklist.cards.Identity[0].cards.influencelimit;
+    o.attachments[0].text +=  decklist.cards.Identity[0].card.minimumdecksize;
+    o.attachments[0].text += ') - Influence: ' + usedInfluence + '/';
+    o.attachments[0].text += decklist.cards.Identity[0].card.influencelimit;
     return o;
 };
 
