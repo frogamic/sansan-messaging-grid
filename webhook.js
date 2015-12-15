@@ -22,6 +22,8 @@ var shorthandRegExp = new RegExp(
 );
 
 var port = process.env.PORT || 3000;
+var triggerDecklist = process.env.TRIGGER_DECKLIST || 'decklist';
+var triggerCard = process.env.TRIGGER_CARD || 'nrdb';
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -53,6 +55,7 @@ function findCards (searches) {
 }
 
 app.post('/', function (req, res) {
+    var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
     }
@@ -61,7 +64,18 @@ app.post('/', function (req, res) {
         return res.sendStatus(200);
     }
 
-    searches = findSearchStrings(req.body.text);
+    if (req.body.command) {
+        if (req.body.command === '/' + triggerCard) {
+            searches[0] = req.body.text;
+        }
+    } else {
+        var re = new RegExp('^' + triggerCard + ':\\s*', 'i');
+        if (req.body.trigger_word.match(re)) {
+            searches[0] = req.body.text.replace(re, '');
+        } else {
+            searches = findSearchStrings(req.body.text);
+        }
+    }
     if (searches && searches.length > 0) {
         for (i in searches) {
             searches[i] = searches[i].toLowerCase().replace(shorthandRegExp, function(sh){
@@ -80,7 +94,7 @@ app.post('/', function (req, res) {
             res.sendStatus(500);
         });
     } else {
-        res.sendStatus(200);
+        res.send('');
     }
 });
 
