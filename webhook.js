@@ -9,16 +9,28 @@ var port = process.env.PORT || 3000;
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 
+var initpromise;
+
 function findSearchStrings (text) {
-    console.info(text);
     var cardFinder = new RegExp('.*?\\[(.*?)\\]', 'g');
     var searches = [];
     var i;
     while(i = cardFinder.exec(text)) {
         searches.push(i[1]);
     }
-    console.info(searches);
     return searches;
+}
+
+function findCards (searches) {
+    var promises = [];
+    for (var i = 0; i < searches.length; i++) {
+        promises[i] = nrdb.getCardByTitle(searches[i]);
+    }
+    return new Promise(function (resolve, reject) {
+        Promise.all(promises).then(function (cards) {
+            resolve (cards);
+        }, reject);
+    });
 }
 
 app.post('/', function (req, res) {
@@ -30,33 +42,28 @@ app.post('/', function (req, res) {
         return res.sendStatus(200);
     }
 
-    console.info(req.body);
-
-    var searches = findSearchStrings(req.body.text);
-    if (searches.length) {
-        var cards = [];
-        var p = nrdb.getCardByTitle(searches[0]);
-        for (var i = 0; i < searches.length; i++) {
-            p = p.then(function (card) {
-                cards.push(card);
-                return nrdb.getCardByTitle(searches[i]);
+    searches = findSearchStrings(req.body.text);
+    if (searches && searches.length > 0) {
+        initpromise.then(function () {
+            findCards(searches).then (function (results) {
+                res.json(formatting.formatCards(results));
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
             });
-        }
-        p.then(function (card) {
-            cards.push(card);
-            res.json(formatting.formatCards(cards));
-        }, function () {
-            res.json(formatting.formatCards(cards));
+        }, function(err) {
+            console.log(err);
+            res.sendStatus(500);
         });
     } else {
         res.sendStatus(200);
     }
 });
 
+initpromise = nrdb.init();
+
 app.listen(port);
 console.info('Express listening on port ' + port);
-
-nrdb.init();
 
 module.exports = {app: app, findSearchStrings: findSearchStrings};
 
