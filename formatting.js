@@ -1,13 +1,13 @@
 var colours = require('./colours.json');
 
 var stats = [
-    ['baselink', ':link:'],
-    ['cost', ':credit:'],
-    ['memoryunits', ':mu:'],
+    ['baselink', ':_link:'],
+    ['cost', ':_credit:'],
+    ['memoryunits', ':_mu:'],
     ['strength', ' str'],
-    ['trash', ':trash:'],
-    ['advancementcost', ':advance:'],
-    ['agendapoints', ':agenda:']
+    ['trash', ':_trash:'],
+    ['advancementcost', ':_advance:'],
+    ['agendapoints', ':_agenda:']
 ];
 
 exports.formatCards = (cards) => {
@@ -30,7 +30,7 @@ exports.formatCards = (cards) => {
         } else {
             a.pretext += '\u200b*';
         }
-        a.pretext += ' - :' + faction + ':';
+        a.pretext += ' - :_' + faction + ':';
         if (cards[i].factioncost) {
             for (var j = 0; j < cards[i].factioncost; j++) {
                 a.pretext += '•';
@@ -48,9 +48,9 @@ exports.formatCards = (cards) => {
             first = false;
         }
         if (cards[i].type === 'Asset' || cards[i].type === 'Upgrade' || cards[i].type === 'ICE') {
-            stats[1][1] = ':rez:';
+            stats[1][1] = ':_rez:';
         } else {
-            stats[1][1] = ':credit:';
+            stats[1][1] = ':_credit:';
         }
         for (j = 0; j < stats.length; j++) {
             if (cards[i][stats[j][0]] || cards[i][stats[j][0]] === 0) {
@@ -61,8 +61,8 @@ exports.formatCards = (cards) => {
                 first = false;
             }
         }
-        a.pretext = a.pretext.replace(/(\d|X)\s*:mu:/gi, function (x) {
-            return x.replace(/(.).*/, ':$1mu:').toLowerCase();
+        a.pretext = a.pretext.replace(/(\d|X)\s*:_mu:/gi, function (x) {
+            return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
         });
         a.color = colours[faction];
         if (cards[i].text) {
@@ -78,16 +78,16 @@ exports.formatText = (text) => {
 
     text = text.replace(/\r\n/g, '\n');
 
-    text = text.replace(/\[Credits\]/g, ':credit:');
-    text = text.replace(/\[Recurring Credits\]/g, ':recurring-credit:');
-    text = text.replace(/\[Click\]/g, ':click:');
-    text = text.replace(/\[Link\]/g, ':link:');
-    text = text.replace(/\[Trash\]/g, ':trash:');
-    text = text.replace(/\[Subroutine\]/g, ':subroutine:');
-    text = text.replace(/(\d|X)\[Memory Unit\]/gi, function (x) {
-        return x.replace(/(.).*/, ':$1mu:').toLowerCase();
+    text = text.replace(/\[Credits\]/g, ':_credit:');
+    text = text.replace(/\[Recurring Credits\]/g, ':_recurring-credit:');
+    text = text.replace(/\[Click\]/g, ':_click:');
+    text = text.replace(/\[Link\]/g, ':_link:');
+    text = text.replace(/\[Trash\]/g, ':_trash:');
+    text = text.replace(/\[Subroutine\]/g, ':_subroutine:');
+    text = text.replace(/(\d|X)\s*\[Memory Unit\]/gi, function (x) {
+        return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
     });
-    text = text.replace(/\[Memory Unit\]/g, ':mu:');
+    text = text.replace(/\[Memory Unit\]/g, ':_mu:');
 
     text = text.replace(/<strong>/g, '*\u200b');
     text = text.replace(/<\/strong>/g, '\u200b*');
