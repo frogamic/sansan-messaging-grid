@@ -22,8 +22,6 @@ var shorthandRegExp = new RegExp(
 );
 
 var port = process.env.PORT || 3000;
-var triggerDecklist = process.env.TRIGGER_DECKLIST || 'decklist';
-var triggerCard = process.env.TRIGGER_CARD || 'nrdb';
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -54,6 +52,24 @@ function findCards (searches) {
     });
 }
 
+app.post('/decklist', function (req, res) {
+    if (req.body.trigger_word) {
+        req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
+    }
+    var match = req.body.text.match(/netrunnerdb.com\/\w\w\/decklist\/(\d+)/);
+    if (match) {
+        var id = match[1];
+        nrdb.getDecklist(id).then(function (decklist) {
+            res.json(formatting.formatDecklist(decklist));
+        }, function (err) {
+            console.log(err);
+            res.send('');
+        });
+    } else {
+        res.send('');
+    }
+}
+
 app.post('/', function (req, res) {
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
@@ -68,13 +84,10 @@ app.post('/', function (req, res) {
         if (req.body.command === '/' + triggerCard) {
             searches[0] = req.body.text;
         }
+    } else if (req.body.trigger_word) {
+        searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     } else {
-        var re = new RegExp('^' + triggerCard + ':\\s*', 'i');
-        if (req.body.trigger_word.match(re)) {
-            searches[0] = req.body.text.replace(re, '');
-        } else {
-            searches = findSearchStrings(req.body.text);
-        }
+        searches = findSearchStrings(req.body.text);
     }
     if (searches && searches.length > 0) {
         for (i in searches) {
