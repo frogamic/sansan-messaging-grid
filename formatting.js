@@ -7,15 +7,15 @@ var headings = [
 ];
 
 var stats = [
-    ['baselink', ':_link:'],
+    ['baselink', ' :_link:'],
     ['cost', ':_credit:'],
-    ['memoryunits', ':_mu:'],
+    ['memoryunits', ' :_mu:'],
     ['strength', ' str'],
-    ['trash', ':_trash:'],
-    ['advancementcost', ':_advance:'],
+    ['trash', ' :_trash:'],
+    ['advancementcost', ' :_advance:'],
     ['minimumdecksize', ' :_deck:'],
     ['influencelimit', '•'],
-    ['agendapoints', ':_agenda:']
+    ['agendapoints', ' :_agenda:']
 ];
 
 function influenceDots (influence) {
@@ -49,7 +49,7 @@ exports.formatDecklist = (decklist) => {
                     decksize += card.quantity;
                     if (card.card.faction !== faction) {
                         var inf = card.quantity * card.card.factioncost;
-                        fields[f].value += influenceDots(inf);
+                        fields[f].value += ' ' + influenceDots(inf);
                         usedInfluence += inf;
                     }
                 }
@@ -102,12 +102,11 @@ exports.formatCards = (cards) => {
                 if (!first) {
                     a.pretext += ' - ';
                 }
-                if (cards[i].type = 'Identity' && stats[j][0] === 'influencelimit' && !cards[i].influencelimit) {
-                    a.pretext += '∞•';
-                } else {
-                    a.pretext += cards[i][stats[j][0]] + stats[j][1];
-                }
+
+                a.pretext += cards[i][stats[j][0]] + stats[j][1];
                 first = false;
+            } else if (cards[i].type === 'Identity' && stats[j][0] === 'influencelimit' && !cards[i].influencelimit) {
+                a.pretext += ' - ∞•';
             }
         }
         a.pretext = a.pretext.replace(/(\d|X)\s*:_mu:/gi, function (x) {
