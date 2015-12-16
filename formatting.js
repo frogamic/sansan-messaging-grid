@@ -42,16 +42,16 @@ exports.formatDecklist = (decklist) => {
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = exports.formatTitle(decklist.name, decklist.url);
     o.text += ' - _\u200b' + decklist.creator + '\u200b_';
-    for (var f in headings) {
+    for (let f in headings) {
         fields[f] = {title: '', value: '', short: true};
-        for (var t in headings[f]) {
+        for (let t in headings[f]) {
             var type = headings[f][t];
             if (decklist.cards[type]) {
                 if (t) {
                     fields[f].value += '\n\n';
                 }
                 fields[f].value += exports.formatTitle(type);
-                for (var i in decklist.cards[type]) {
+                for (let i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
                     fields[f].value += '\n' + card.quantity;
