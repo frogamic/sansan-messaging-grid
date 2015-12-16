@@ -26,32 +26,32 @@ describe('Card-text formatting', function() {
     });
     it('should replace all click, trash and link symbols in with slack emoji', function (done) {
         expect(
-            formatting.formatText('[Click][Click]\n [Trash] 2[Link]')
-              ).to.equal(':click::click:\n :trash: 2:link:');
+            formatting.formatText('[Click][Click]\n [Trash] 2 [Link]')
+              ).to.equal(':_click::_click:\n :_trash: 2 :_link:');
         done();
     });
     it('should replace all credit symbols in with slack emoji', function (done) {
         expect(
             formatting.formatText('1[Credits] \n2[Credits] 3[Recurring Credits]')
-              ).to.equal('1:credit: \n2:credit: 3:recurring-credit:');
+              ).to.equal('1:_credit: \n2:_credit: 3:_recurring-credit:');
         done();
     });
     it('should replace subroutine symbols with emoji and insert newlines where appropriate', function (done) {
         expect(
             formatting.formatText('[Subroutine] End the run.\r\n[Subroutine] End the run.')
-             ).to.equal(':subroutine: End the run.\n:subroutine: End the run.');
+             ).to.equal(':_subroutine: End the run.\n:_subroutine: End the run.');
         done();
     });
     it('should replace all memory symbols in with slack emoji', function (done) {
         expect(
             formatting.formatText('+1[Memory Unit] +2[Memory Unit]\n +3[Memory Unit] +4[Memory Unit] +X[Memory Unit] [Memory Unit]')
-              ).to.equal('+:1mu: +:2mu:\n +:3mu: +:4mu: +:xmu: :mu:');
+              ).to.equal('+:_1mu: +:_2mu:\n +:_3mu: +:_4mu: +:_xmu: :_mu:');
         done();
     });
     it('should add newlines to card text where appropriate', function (done) {
         expect(
             formatting.formatText('1[Credits]: do a thing.\r\n2[Credits], [Trash]: do something else')
-              ).to.equal('1:credit:: do a thing.\n2:credit:, :trash:: do something else');
+              ).to.equal('1:_credit:: do a thing.\n2:_credit:, :_trash:: do something else');
         done();
     });
     it('should replace HTML bolding with slack bolding', function (done) {
@@ -63,7 +63,7 @@ describe('Card-text formatting', function() {
     it('should replace HTML superscript with unicode superscript', function (done) {
         expect(
             formatting.formatText('[Subroutine] <strong>Trace<sup>1234567890X</sup></strong>– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1[Credits].')
-              ).to.equal(':subroutine: *\u200bTrace¹²³⁴⁵⁶⁷⁸⁹⁰ˣ\u200b*– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:credit:.');
+              ).to.equal(':_subroutine: *\u200bTrace¹²³⁴⁵⁶⁷⁸⁹⁰ˣ\u200b*– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:_credit:.');
         done();
     });
 });
@@ -96,72 +96,72 @@ describe('Card title formatting', function() {
 describe('Card formatting', function () {
     it('should correctly format Identities', function (done) {
         expect(formatting.formatCards([testCards[0]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" } ]
+            text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Natural - :_shaper:\n1 :_link: - 45 :_deck: - 15• - _\u200bCore Set\u200b_", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" } ]
         });
         expect(formatting.formatCards([testCards[1]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
+            text: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>", attachments: [ { pretext: "*\u200bIdentity:\u200b* Division - :_jinteki:\n45 :_deck: - 15• - _\u200bThe Valley\u200b_", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:_click:,:_click:,:_click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
         });
         done();
     });
 
     it('should correctly format hardware', function (done) {
         expect(formatting.formatCards([testCards[2]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/05037|*\u200b◆ Logos\u200b*>", attachments: [ { pretext: "*\u200bHardware:\u200b* Console - :criminal:••\n4:credit:", text: "+:1mu:\nYour maximum hand size is increased by 1.\nWhenever the Corp scores an agenda, you may search your stack for a card and add it to your grip. Shuffle your stack.\nLimit 1 *\u200bconsole\u200b* per player.", mrkdwn_in: [ "pretext", "text" ], color: "#0066cc" } ]
+            text: "<http://netrunnerdb.com/en/card/05037|*\u200b◆ Logos\u200b*>", attachments: [ { pretext: "*\u200bHardware:\u200b* Console - :_criminal:••\n4:_credit: - _\u200bHonor and Profit\u200b_", text: "+:_1mu:\nYour maximum hand size is increased by 1.\nWhenever the Corp scores an agenda, you may search your stack for a card and add it to your grip. Shuffle your stack.\nLimit 1 *\u200bconsole\u200b* per player.", mrkdwn_in: [ "pretext", "text" ], color: "#0066cc" } ]
         });
         done();
     });
 
     it('should correctly format programs', function (done) {
         expect(formatting.formatCards([testCards[3]])).to.deep.equal({
-            text: "<http://netrunnerdb.com/en/card/01013|*\u200bWyrm\u200b*>", attachments: [ { pretext: "*\u200bProgram:\u200b* Icebreaker - AI - :anarch:••\n1:credit: - :1mu: - 1 str", text: "3:credit:: Break ice subroutine on a piece of ice with 0 or less strength.\n1:credit:: Ice has −1 strength.\n1:credit:: +1 strength.", mrkdwn_in: [ "pretext", "text" ], color: "#ff531a" } ]
+            text: "<http://netrunnerdb.com/en/card/01013|*\u200bWyrm\u200b*>", attachments: [ { pretext: "*\u200bProgram:\u200b* Icebreaker - AI - :_anarch:••\n1:_credit: - :_1mu: - 1 str - _\u200bCore Set\u200b_", text: "3:_credit:: Break ice subroutine on a piece of ice with 0 or less strength.\n1:_credit:: Ice has −1 strength.\n1:_credit:: +1 strength.", mrkdwn_in: [ "pretext", "text" ], color: "#ff531a" } ]
             });
         done();
     });
 
     it('should correctly format resources', function (done) {
         expect(formatting.formatCards([testCards[4]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/02067|*\u200bAll-nighter\u200b*>","attachments":[{"pretext":"*\u200bResource\u200b* - :shaper:••\n0:credit:","text":":click:, :trash:: Gain :click::click:.","mrkdwn_in":["pretext","text"],"color":"#47d147"}]
+            "text":"<http://netrunnerdb.com/en/card/02067|*\u200bAll-nighter\u200b*>","attachments":[{"pretext":"*\u200bResource\u200b* - :_shaper:••\n0:_credit: - _\u200bA Study in Static\u200b_","text":":_click:, :_trash:: Gain :_click::_click:.","mrkdwn_in":["pretext","text"],"color":"#47d147"}]
         });
         done();
     });
 
     it('should correctly format events', function (done) {
-        expect(formatting.formatCards([testCards[5]])).to.deep.equal({"text":"<http://netrunnerdb.com/en/card/01002|*\u200bDéjà Vu\u200b*>","attachments":[{"pretext":"*\u200bEvent\u200b* - :anarch:••\n2:credit:","text":"Add 1 card (or up to 2 *\u200bvirus\u200b* cards) from your heap to your grip.","mrkdwn_in":["pretext","text"],"color":"#ff531a"}]
+        expect(formatting.formatCards([testCards[5]])).to.deep.equal({"text":"<http://netrunnerdb.com/en/card/01002|*\u200bDéjà Vu\u200b*>","attachments":[{"pretext":"*\u200bEvent\u200b* - :_anarch:••\n2:_credit: - _\u200bCore Set\u200b_","text":"Add 1 card (or up to 2 *\u200bvirus\u200b* cards) from your heap to your grip.","mrkdwn_in":["pretext","text"],"color":"#ff531a"}]
         });
         done();
     });
 
     it('should correctly format agendas', function (done) {
         expect(formatting.formatCards([testCards[6]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/08100|*\u200bVanity Project\u200b*>","attachments":[{"pretext":"*\u200bAgenda\u200b* - :neutral:•\n6:advance: - 4:agenda:","mrkdwn_in":["pretext","text"],"color":"#808080"}]
+            "text":"<http://netrunnerdb.com/en/card/08100|*\u200bVanity Project\u200b*>","attachments":[{"pretext":"*\u200bAgenda\u200b* - :_neutral:•\n6 :_advance: - 4 :_agenda: - _\u200bOld Hollywood\u200b_","mrkdwn_in":["pretext","text"],"color":"#808080"}]
         });
         done();
     });
 
     it('should correctly format assets', function (done) {
         expect(formatting.formatCards([testCards[7]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/07009|*\u200b◆ Mark Yale\u200b*>","attachments":[{"pretext":"*\u200bAsset:\u200b* Executive - :weyland:•\n1:rez: - 3:trash:","text":"Whenever you spend an agenda counter, gain 1:credit:.\n:trash: or *\u200bany agenda counter\u200b*: Gain 2:credit:.","mrkdwn_in":["pretext","text"],"color":"#287c64"}]
+            "text":"<http://netrunnerdb.com/en/card/07009|*\u200b◆ Mark Yale\u200b*>","attachments":[{"pretext":"*\u200bAsset:\u200b* Executive - :_weyland:•\n1 :_rez: - 3 :_trash: - _\u200bOrder and Chaos\u200b_","text":"Whenever you spend an agenda counter, gain 1:_credit:.\n:_trash: or *\u200bany agenda counter\u200b*: Gain 2:_credit:.","mrkdwn_in":["pretext","text"],"color":"#287c64"}]
         });
         done();
     });
 
     it('should correctly format upgrades', function (done) {
         expect(formatting.formatCards([testCards[8]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/06112|*\u200bSelf-destruct\u200b*>","attachments":[{"pretext":"*\u200bUpgrade\u200b* - :neutral:\n2:rez: - 0:trash:","text":"Install only in a remote server.\n:trash:: Trash all cards installed in or protecting this server and *\u200btraceˣ\u200b*– if successful, do 3 net damage. X is the number of cards trashed. Use this ability only during a run on this server.","mrkdwn_in":["pretext","text"],"color":"#808080"}]
+            "text":"<http://netrunnerdb.com/en/card/06112|*\u200bSelf-destruct\u200b*>","attachments":[{"pretext":"*\u200bUpgrade\u200b* - :_neutral:\n2 :_rez: - 0 :_trash: - _\u200bThe Source\u200b_","text":"Install only in a remote server.\n:_trash:: Trash all cards installed in or protecting this server and *\u200btraceˣ\u200b*– if successful, do 3 net damage. X is the number of cards trashed. Use this ability only during a run on this server.","mrkdwn_in":["pretext","text"],"color":"#808080"}]
         });
         done();
     });
 
     it('should correctly format operations', function (done) {
         expect(formatting.formatCards([testCards[9]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/08035|*\u200bRecruiting Trip\u200b*>","attachments":[{"pretext":"*\u200bOperation\u200b* - :jinteki:•\n0:credit:","text":"Search R&amp;D for up to X different *\u200bsysops\u200b* (by title), reveal them, and add them to HQ. Shuffle R&amp;D.","mrkdwn_in":["pretext","text"],"color":"#ff0000"}]
+            "text":"<http://netrunnerdb.com/en/card/08035|*\u200bRecruiting Trip\u200b*>","attachments":[{"pretext":"*\u200bOperation\u200b* - :_jinteki:•\n0:_credit: - _\u200bBreaker Bay\u200b_","text":"Search R&amp;D for up to X different *\u200bsysops\u200b* (by title), reveal them, and add them to HQ. Shuffle R&amp;D.","mrkdwn_in":["pretext","text"],"color":"#ff0000"}]
         });
         done();
     });
 
     it('should correctly format ICE', function (done) {
         expect(formatting.formatCards([testCards[10]])).to.deep.equal({
-            "text":"<http://netrunnerdb.com/en/card/01088|*\u200bData Raven\u200b*>","attachments":[{"pretext":"*\u200bICE:\u200b* Sentry - Tracer - Observer - :nbn:••\n4:rez: - 4 str","text":"When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.\n*\u200bHosted power counter:\u200b* Give the Runner 1 tag.\n:subroutine: *\u200bTrace³\u200b*– If successful, place 1 power counter on Data Raven.","mrkdwn_in":["pretext","text"],"color":"#ffb900"}]
+            "text":"<http://netrunnerdb.com/en/card/01088|*\u200bData Raven\u200b*>","attachments":[{"pretext":"*\u200bICE:\u200b* Sentry - Tracer - Observer - :_nbn:••\n4 :_rez: - 4 str - _\u200bCore Set\u200b_","text":"When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.\n*\u200bHosted power counter:\u200b* Give the Runner 1 tag.\n:_subroutine: *\u200bTrace³\u200b*– If successful, place 1 power counter on Data Raven.","mrkdwn_in":["pretext","text"],"color":"#ffb900"}]
         });
         done();
     });
@@ -169,8 +169,8 @@ describe('Card formatting', function () {
     it('should correctly format multiple cards', function (done) {
         expect(formatting.formatCards(testCards.slice(0,2))).to.deep.equal({
             text: "<http://netrunnerdb.com/en/card/01033|*\u200bKate \"Mac\" McCaffrey: Digital Tinker\u200b*>", attachments: [
-                { pretext: "*\u200bIdentity:\u200b* Natural - :shaper:\n45/15 - 1:link:", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" },
-                { pretext: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>\n*\u200bIdentity:\u200b* Division - :jinteki:\n45/15", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:click:,:click:,:click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
+                { pretext: "*\u200bIdentity:\u200b* Natural - :_shaper:\n1 :_link: - 45 :_deck: - 15• - _\u200bCore Set\u200b_", text: "Lower the install cost of the first program or piece of hardware you install each turn by 1.", mrkdwn_in: [ "pretext", "text" ], color: "#47d147" },
+                { pretext: "<http://netrunnerdb.com/en/card/08012|*\u200bJinteki Biotech: Life Imagined\u200b*>\n*\u200bIdentity:\u200b* Division - :_jinteki:\n45 :_deck: - 15• - _\u200bThe Valley\u200b_", text: "Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.\n:_click:,:_click:,:_click:: Flip this identity.\nThe Brewery: When you flip this identity, do 2 net damage.\nThe Tank: When you flip this identity, shuffle Archives into R&amp;D.\nThe Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced.", mrkdwn_in: [ "pretext", "text" ], color: "#ff0000" } ]
         });
         done();
     });
