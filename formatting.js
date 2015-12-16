@@ -63,11 +63,11 @@ exports.formatDecklist = (decklist) => {
     o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
     o.attachments[0].pretext = this.formatTitle(decklist.cards.Identity[0].card.title);
-    o.attachments[0].pretext += '\n:_deck: ' + decksize + ' (min ';
+    o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
     o.attachments[0].pretext += decklist.cards.Identity[0].card.influencelimit + '•';
-    o.attachments[0].pretext += ' - :_agenda: ' + agendapoints;
+    o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     return o;
 };
 
