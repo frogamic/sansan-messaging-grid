@@ -103,11 +103,11 @@ exports.formatDecklist = (decklist) => {
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
-    o.attachments[0].pretext += decklist.cards.Identity[0].card.influencelimit + '•';
+    o.attachments[0].pretext += (decklist.cards.Identity[0].card.influencelimit || '∞') + '•';
     if (decklist.cards.Identity[0].card.side !== 'Runner') {
         o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     }
-    o.attachments[0].pretext += '\n Cards up to ' + getPack(newestCard);
+    o.attachments[0].pretext += '\nCards up to ' + getPack(newestCard);
     return o;
 };
 
