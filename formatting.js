@@ -67,7 +67,9 @@ exports.formatDecklist = (decklist) => {
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
     o.attachments[0].pretext += decklist.cards.Identity[0].card.influencelimit + '•';
-    o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
+    if (decklist.cards.Identity[0].card.side !== 'Runner') {
+        o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
+    }
     return o;
 };
 
