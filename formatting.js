@@ -13,6 +13,8 @@ var stats = [
     ['strength', ' str'],
     ['trash', ':_trash:'],
     ['advancementcost', ':_advance:'],
+    ['minimumdecksize', ':_deck:'],
+    ['influencelimit', '•'],
     ['agendapoints', ':_agenda:']
 ];
 
@@ -57,10 +59,10 @@ exports.formatDecklist = (decklist) => {
     o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
     o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].card.title);
-    o.attachments[0].text += '\nDeck: ' + decksize + ' (';
+    o.attachments[0].text += '\n' + decksize + ':_deck:  (min ';
     o.attachments[0].text +=  decklist.cards.Identity[0].card.minimumdecksize;
-    o.attachments[0].text += ') - Influence: ' + usedInfluence + '/';
-    o.attachments[0].text += decklist.cards.Identity[0].card.influencelimit;
+    o.attachments[0].text += ') - ' + usedInfluence + '/';
+    o.attachments[0].text += decklist.cards.Identity[0].card.influencelimit + '•';
     return o;
 };
 
@@ -90,15 +92,6 @@ exports.formatCards = (cards) => {
         }
         a.pretext += '\n';
         var first = true;
-        if (cards[i].type === 'Identity') {
-            a.pretext += cards[i].minimumdecksize + '/';
-            if (cards[i].influencelimit || cards[i].influencelimit === 0) {
-                a.pretext += cards[i].influencelimit;
-            } else {
-                a.pretext += '∞';
-            }
-            first = false;
-        }
         if (cards[i].type === 'Asset' || cards[i].type === 'Upgrade' || cards[i].type === 'ICE') {
             stats[1][1] = ':_rez:';
         } else {
@@ -109,7 +102,11 @@ exports.formatCards = (cards) => {
                 if (!first) {
                     a.pretext += ' - ';
                 }
-                a.pretext += cards[i][stats[j][0]] + stats[j][1];
+                if (cards[i].type = 'Identity' && stats[j][0] === 'influencelimit' && !cards[i].influencelimit) {
+                    a.pretext += '∞•';
+                } else {
+                    a.pretext += cards[i][stats[j][0]] + stats[j][1];
+                }
                 first = false;
             }
         }
