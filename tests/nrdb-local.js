@@ -14,10 +14,11 @@ describe('NetrunnerDB object', function () {
         done();
     });
     it('should contain methods for searching cards', function (done) {
-        expect(nrdb).to.have.all.keys('init', 'getCardByCode', 'getCardByTitle');
+        expect(nrdb).to.have.all.keys('init', 'getCardByCode', 'getCardByTitle', 'getDecklist');
         expect(nrdb.init).to.be.a('function');
         expect(nrdb.getCardByTitle).to.be.a('function');
         expect(nrdb.getCardByCode).to.be.a('function');
+        expect(nrdb.getDecklist).to.be.a('function');
         done();
     });
     it('should be initializable', function () {
