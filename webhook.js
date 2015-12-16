@@ -56,7 +56,7 @@ app.post('/decklist', function (req, res) {
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     }
-    var match = req.body.text.match(/(?:netrunnerdb.com\/\w\w\/decklist\/)?(\d+)/);
+    var match = req.body.text.match(/(\d+)/);
     if (match) {
         var id = match[1];
         nrdb.getDecklist(id).then(function (decklist) {
@@ -88,22 +88,33 @@ app.post('/', function (req, res) {
         searches = findSearchStrings(req.body.text);
     }
     if (searches && searches.length > 0) {
-        for (i in searches) {
-            searches[i] = searches[i].toLowerCase().replace(shorthandRegExp, function(sh){
-                return shorthands[sh];
-            });
-        }
-        initpromise.then(function () {
-            findCards(searches).then (function (results) {
-                res.json(formatting.formatCards(results));
+        var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
+        if (match) {
+            var id = match[1];
+            nrdb.getDecklist(id).then(function (decklist) {
+                res.json(formatting.formatDecklist(decklist));
             }, function (err) {
+                console.log(err);
+                res.send('');
+            });
+        } else {
+            for (i in searches) {
+                searches[i] = searches[i].toLowerCase().replace(shorthandRegExp, function(sh){
+                    return shorthands[sh];
+                });
+            }
+            initpromise.then(function () {
+                findCards(searches).then (function (results) {
+                    res.json(formatting.formatCards(results));
+                }, function (err) {
+                    console.log(err);
+                    res.sendStatus(500);
+                });
+            }, function(err) {
                 console.log(err);
                 res.sendStatus(500);
             });
-        }, function(err) {
-            console.log(err);
-            res.sendStatus(500);
-        });
+        }
     } else {
         res.send('');
     }
