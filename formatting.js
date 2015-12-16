@@ -113,7 +113,7 @@ exports.formatDecklist = (decklist) => {
 
 exports.formatCards = (cards) => {
     var o = {text:'', attachments:[]};
-    for (var i in cards) {
+    for (var i = 0; i < cards.length; i++) {
         var a = {pretext: '', mrkdwn_in: ['pretext', 'text']};
         var faction = cards[i].faction.replace(/(\s|-).*/, '').toLowerCase();
         var title = cards[i].title;
