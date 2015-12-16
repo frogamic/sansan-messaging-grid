@@ -54,6 +54,7 @@ exports.formatDecklist = (decklist) => {
             }
         }
     }
+    o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
     o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].card.title);
     o.attachments[0].text += '\nDeck: ' + decksize + ' (';
