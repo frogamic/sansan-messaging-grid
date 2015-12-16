@@ -71,11 +71,11 @@ function getDecklist (id) {
                         quantity: card.quantity, card: card.card
                     });
                 });
-                decklist.cards.forEach((card, i) => {
-                    decklist.cards[i].sort(function (a, b) {
+                for (let type in decklist.cards) {
+                    decklist.cards[type].sort(function (a, b) {
                         return a.card.title.localeCompare(b.card.title);
                     });
-                });
+                }
                 resolve(decklist);
             }, function (err) {
                 console.log(err);
