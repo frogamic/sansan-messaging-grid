@@ -50,12 +50,10 @@ function getDecklist (id) {
             }
             Promise.all(promises).then(function (values) {
                 for (var i in values) {
-                    console.info(values[i].card.title);
                     var type = values[i].card.type;
                     if (type === 'ICE') {
                         var typematch = values[i].card.subtype.match(/(Barrier|Code Gate|Sentry)/g);
-                        console.info(typematch);
-                        if (typematch.length === 0) {
+                        if (!typematch) {
                             type = 'Other';
                         } else if (typematch.length > 1) {
                             type = 'Multi';
@@ -66,7 +64,6 @@ function getDecklist (id) {
                             && values[i].card.subtype.match(/Icebreaker/)) {
                         type = 'Icebreaker';
                     }
-                    console.info(type);
                     if (!decklist.cards[type]) {
                         decklist.cards[type] = [];
                     }
