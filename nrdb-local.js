@@ -19,7 +19,7 @@ module.exports = {
     getCardByTitle: getCardByTitle,
     getCardByCode: getCardByCode,
     getDecklist: getDecklist
-}
+};
 
 function createDecklistCard (code, quantity) {
     return new Promise (function (resolve, reject) {
@@ -45,14 +45,14 @@ function getDecklist (id) {
             decklist.name = deck.name;
             decklist.url = netrunnerDeckDisplayURL + id;
             decklist.creator = deck.username;
-            for (var code in deck.cards) {
+            for (let code in deck.cards) {
                 promises.push(createDecklistCard(code, deck.cards[code]));
             }
             Promise.all(promises).then(function (values) {
-                for (var i in values) {
-                    var type = values[i].card.type;
+                values.forEach((card, i) => {
+                    var type = card.card.type;
                     if (type === 'ICE') {
-                        var typematch = values[i].card.subtype.match(/(Barrier|Code Gate|Sentry)/g);
+                        var typematch = card.card.subtype.match(/(Barrier|Code\ Gate|Sentry)/g);
                         if (!typematch) {
                             type = 'Other';
                         } else if (typematch.length > 1) {
@@ -60,22 +60,22 @@ function getDecklist (id) {
                         } else {
                             type = typematch[0];
                         }
-                    } else if (type === 'Program' && values[i].card.subtype
-                            && values[i].card.subtype.match(/Icebreaker/)) {
+                    } else if (type === 'Program' && card.card.subtype
+                            && card.card.subtype.match(/Icebreaker/)) {
                         type = 'Icebreaker';
                     }
                     if (!decklist.cards[type]) {
                         decklist.cards[type] = [];
                     }
                     decklist.cards[type].push({
-                        quantity: values[i].quantity, card: values[i].card
+                        quantity: card.quantity, card: card.card
                     });
-                }
-                for (var t in decklist.cards) {
-                    decklist.cards[t].sort(function (a, b) {
+                });
+                decklist.cards.forEach((card, i) => {
+                    decklist.cards[i].sort(function (a, b) {
                         return a.card.title.localeCompare(b.card.title);
                     });
-                }
+                });
                 resolve(decklist);
             }, function (err) {
                 console.log(err);
@@ -151,9 +151,9 @@ function init (cardArray) {
     });
     indexPromise = new Promise (function (resolve, reject) {
         initPromise.then(function(cardArray) {
-            for (var i = 0; i < cardArray.length; i++) {
-                cards[cardArray[i].code] = cardArray[i];
-            }
+            cardArray.forEach((card) => {
+                cards[card.code] = card;
+            });
             fuzzySearch = new FuzzySearch(cardArray, {
                 'caseSensitive': false,
                 'termPath': 'title',
