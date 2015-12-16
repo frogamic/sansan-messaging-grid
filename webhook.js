@@ -9,7 +9,7 @@ var shorthands = require('./shorthands.json');
 // Regex generated from the shorthand keys to be used in find/replace
 // Only matches whole words
 var shorthandRegExp = new RegExp(
-    Object.keys(shorthands).reduce(function (pv, cv, ci, a) {
+    Object.keys(shorthands).reduce((pv, cv, ci, a) => {
         var o = pv;
         if (ci !== 0) {
             o += '\\b|\\b';
@@ -45,25 +45,25 @@ function findCards(searches) {
     searches.forEach((search, i) => {
         promises[i] = nrdb.getCardByTitle(search);
     });
-    return new Promise(function (resolve, reject) {
-        Promise.all(promises).then(function (cards) {
-            resolve(cards.filter(function (e) {
+    return new Promise((resolve, reject) => {
+        Promise.all(promises).then((cards) => {
+            resolve(cards.filter((e) => {
                 return e;
             }));
         }, reject);
     });
 }
 
-app.post('/decklist', function (req, res) {
+app.post('/decklist', (req, res) => {
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     }
     var match = req.body.text.match(/(\d+)/);
     if (match) {
         var id = match[1];
-        nrdb.getDecklist(id).then(function (decklist) {
+        nrdb.getDecklist(id).then((decklist) => {
             res.json(formatting.formatDecklist(decklist));
-        }, function () {
+        }, () => {
             res.send('');
         });
     } else {
@@ -71,7 +71,7 @@ app.post('/decklist', function (req, res) {
     }
 });
 
-app.post('/', function (req, res) {
+app.post('/', (req, res) => {
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -92,30 +92,30 @@ app.post('/', function (req, res) {
         var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
         if (match) {
             var id = match[1];
-            nrdb.getDecklist(id).then(function (decklist) {
+            nrdb.getDecklist(id).then((decklist) => {
                 res.json(formatting.formatDecklist(decklist));
-            }, function () {
+            }, () => {
                 res.send('');
             });
         } else {
             searches.forEach((search) => {
-                search = search.toLowerCase().replace(shorthandRegExp, function (sh) {
+                search = search.toLowerCase().replace(shorthandRegExp, (sh) => {
                     return shorthands[sh];
                 });
             });
-            initpromise.then(function () {
-                findCards(searches).then(function (results) {
+            initpromise.then(() => {
+                findCards(searches).then((results) => {
                     var o = formatting.formatCards(results);
                     if (o.text !== '') {
                         res.json(o);
                     } else {
                         res.send('');
                     }
-                }, function (err) {
+                }, (err) => {
                     console.log(err);
                     res.sendStatus(500);
                 });
-            }, function (err) {
+            }, (err) => {
                 console.log(err);
                 res.sendStatus(500);
             });
