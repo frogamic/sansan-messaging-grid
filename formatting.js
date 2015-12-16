@@ -18,29 +18,7 @@ var stats = [
     ['agendapoints', ' :_agenda:']
 ];
 
-var packs = [
-    'Draft',
-    'Core Set',
-    [
-        'What Lies Ahead', 'Trace Amount', 'Cyber Exodus', 'A Study in Static', 'Humanity\'s Shadow', 'Future Proof'
-    ],
-    'Creation and Control',
-    [
-        'Opening Moves', 'Second Thoughts', 'Mala Tempora', 'True Colors', 'Fear and Loathing', 'Double Time'
-    ],
-    'Honor and Profit',
-    [
-        'Upstalk', 'The Spaces Between', 'First Contact', 'Up and Over', 'All That Remains', 'The Source'
-    ],
-    'Order and Chaos',
-    [
-        'The Valley', 'Breaker Bay', 'Chrome City', 'The Underway', 'Old Hollywood', 'The Universe of Tomorrow'
-    ],
-    'Data and Destiny',
-    [
-        'Kala Ghoda', 'Business First', 'Democracy and Dogma', 'Salsette Island'
-    ]
-];
+var packs = require('./datapacks.json');;
 
 function influenceDots(influence) {
     return '•'.repeat(influence);
@@ -94,7 +72,7 @@ exports.formatDecklist = (decklist) => {
             }
         }
     }
-    o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
+    o.attachments[0].color = colours[faction.replace(/[\-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
     o.attachments[0].pretext = this.formatTitle(decklist.cards.Identity[0].card.title);
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
