@@ -40,7 +40,7 @@ exports.formatDecklist = (decklist) => {
     var agendapoints = 0;
     var fields = [];
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
-    o.text = this.formatTitle(decklist.name, decklist.url);
+    o.text = exports.formatTitle(decklist.name, decklist.url);
     o.text += ' - _\u200b' + decklist.creator + '\u200b_';
     for (var f in headings) {
         fields[f] = {title: '', value: '', short: true};
@@ -50,7 +50,7 @@ exports.formatDecklist = (decklist) => {
                 if (t) {
                     fields[f].value += '\n\n';
                 }
-                fields[f].value += this.formatTitle(type);
+                fields[f].value += exports.formatTitle(type);
                 for (var i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
@@ -74,7 +74,7 @@ exports.formatDecklist = (decklist) => {
     }
     o.attachments[0].color = colours[faction.replace(/[\-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
-    o.attachments[0].pretext = this.formatTitle(decklist.cards.Identity[0].card.title);
+    o.attachments[0].pretext = exports.formatTitle(decklist.cards.Identity[0].card.title);
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
@@ -96,9 +96,9 @@ exports.formatCards = (cards) => {
             title = '◆ ' + title;
         }
         if (i === 0) {
-            o.text = this.formatTitle(title, cards[0].url);
+            o.text = exports.formatTitle(title, cards[0].url);
         } else {
-            a.pretext = this.formatTitle(title, cards[i].url) + '\n';
+            a.pretext = exports.formatTitle(title, cards[i].url) + '\n';
         }
         a.pretext += '*\u200b' + cards[i].type;
         if (cards[i].subtype ) {
@@ -135,7 +135,7 @@ exports.formatCards = (cards) => {
         a.pretext += ' - ' + getPack(parseInt(cards[i].code));
         a.color = colours[faction];
         if (cards[i].text) {
-            a.text = this.formatText(cards[i].text);
+            a.text = exports.formatText(cards[i].text);
         }
         o.attachments.push(a);
     }
