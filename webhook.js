@@ -23,6 +23,7 @@ var shorthandRegExp = new RegExp(
 );
 
 var port = process.env.PORT || 3000;
+var token = process.env.TOKEN || '';
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -55,6 +56,9 @@ function findCards(searches) {
 }
 
 app.post('/decklist', (req, res) => {
+    if (!req.body.token || req.body.token !== token) {
+        return res.sendStatus(401);
+    }
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     }
@@ -72,6 +76,9 @@ app.post('/decklist', (req, res) => {
 });
 
 app.post('/', (req, res) => {
+    if (!req.body.token || req.body.token !== token) {
+        return res.sendStatus(401);
+    }
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
