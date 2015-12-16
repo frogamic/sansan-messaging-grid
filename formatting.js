@@ -80,7 +80,7 @@ exports.formatDecklist = (decklist) => {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
                     fields[f].value += '\n' + card.quantity;
-                    fields[f].value += ' × ' + card.card.title;
+                    fields[f].value += ' × <' + card.card.url + '|' + card.card.title + '>';
                     decksize += card.quantity;
                     if (code > newestCard) {
                         newestCard = code;
