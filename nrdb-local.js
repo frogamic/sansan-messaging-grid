@@ -7,6 +7,7 @@ var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
 
 var netrunnerCardURL = 'http://netrunnerdb.com/api/cards/';
 var netrunnerDeckURL = 'http://netrunnerdb.com/api/decklist/';
+var netrunnerDeckDisplayURL = 'http://netrunnerdb.com/en/decklist/';
 var cards = {};
 var fuzzySearch;
 var scheduledUpdate;
@@ -42,7 +43,7 @@ function getDecklist (id) {
             var deck = JSON.parse(body);
             var promises = [];
             decklist.name = deck.name;
-            decklist.url = netrunnerDeckURL + id;
+            decklist.url = netrunnerDeckDisplayURL + id;
             decklist.creator = deck.username;
             for (var code in deck.cards) {
                 promises.push(createDecklistCard(code, deck.cards[code]));
