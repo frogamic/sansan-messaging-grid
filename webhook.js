@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -14,8 +15,8 @@ var shorthandRegExp = new RegExp(
             o += '\\b|\\b';
         }
         o += cv;
-        if(ci == a.length-1) {
-            o+='\\b';
+        if (ci === a.length - 1) {
+            o += '\\b';
         }
         return o;
     }, '\\b')
@@ -28,25 +29,26 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 var initpromise = nrdb.init();
 
-function findSearchStrings (text) {
-    var cardFinder = new RegExp('.*?\\[(.*?)\\]', 'g');
-    var searches = [];
-    var i;
-    while(i = cardFinder.exec(text)) {
+function findSearchStrings(text) {
+    var cardFinder = new RegExp('.*?\\[(.*?)\\]', 'g'),
+        searches = [],
+        i = cardFinder.exec(text);
+    while (i) {
         searches.push(i[1]);
+        i = cardFinder.exec(text);
     }
     return searches;
 }
 
-function findCards (searches) {
-    var promises = [];
-    for (var i = 0; i < searches.length; i++) {
-        promises[i] = nrdb.getCardByTitle(searches[i]);
-    }
+function findCards(searches) {
+    var promises = [], i;
+    searches.forEach((search, i) => {
+        promises[i] = nrdb.getCardByTitle(search);
+    });
     return new Promise(function (resolve, reject) {
         Promise.all(promises).then(function (cards) {
-            resolve (cards.filter(function (e) {
-                return e ? true : false;
+            resolve(cards.filter(function (e) {
+                return e;
             }));
         }, reject);
     });
@@ -61,7 +63,7 @@ app.post('/decklist', function (req, res) {
         var id = match[1];
         nrdb.getDecklist(id).then(function (decklist) {
             res.json(formatting.formatDecklist(decklist));
-        }, function (err) {
+        }, function () {
             res.send('');
         });
     } else {
@@ -92,18 +94,18 @@ app.post('/', function (req, res) {
             var id = match[1];
             nrdb.getDecklist(id).then(function (decklist) {
                 res.json(formatting.formatDecklist(decklist));
-            }, function (err) {
+            }, function () {
                 res.send('');
             });
         } else {
-            for (i in searches) {
-                searches[i] = searches[i].toLowerCase().replace(shorthandRegExp, function(sh){
+            searches.forEach((search) => {
+                search = search.toLowerCase().replace(shorthandRegExp, function (sh) {
                     return shorthands[sh];
                 });
-            }
+            });
             initpromise.then(function () {
-                findCards(searches).then (function (results) {
-                    var o = formatting.formatCards(results)
+                findCards(searches).then(function (results) {
+                    var o = formatting.formatCards(results);
                     if (o.text !== '') {
                         res.json(o);
                     } else {
@@ -113,7 +115,7 @@ app.post('/', function (req, res) {
                     console.log(err);
                     res.sendStatus(500);
                 });
-            }, function(err) {
+            }, function (err) {
                 console.log(err);
                 res.sendStatus(500);
             });
