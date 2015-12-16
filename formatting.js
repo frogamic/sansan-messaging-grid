@@ -31,7 +31,7 @@ var packs = [
     'Honor and Profit',
     [
         'Upstalk', 'The Spaces Between', 'First Contact', 'Up and Over', 'All That Remains', 'The Source'
-    ], 
+    ],
     'Order and Chaos',
     [
         'The Valley', 'Breaker Bay', 'Chrome City', 'The Underway', 'Old Hollywood', 'The Universe of Tomorrow'
@@ -42,15 +42,11 @@ var packs = [
     ]
 ];
 
-function influenceDots (influence) {
-    var dots = '';
-    for (var i = 0; i < influence; i++) {
-        dots += '•';
-    }
-    return dots;
+function influenceDots(influence) {
+    return '•'.repeat(influence);
 }
 
-function getPack (code) {
+function getPack(code) {
     var cycle = packs[Math.floor(code/1000)];
     if (Array.isArray(cycle)) {
         cycle = cycle[Math.floor(((code % 1000) - 1) / 20)];
@@ -67,6 +63,7 @@ exports.formatDecklist = (decklist) => {
     var fields = [];
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = this.formatTitle(decklist.name, decklist.url);
+    o.text += ' - _\u200b' + decklist.creator + '\u200b_';
     for (var f in headings) {
         fields[f] = {title: '', value: '', short: true};
         for (var t in headings[f]) {
@@ -138,7 +135,7 @@ exports.formatCards = (cards) => {
         a.pretext += '\n';
         var first = true;
         if (cards[i].type === 'Asset' || cards[i].type === 'Upgrade' || cards[i].type === 'ICE') {
-            stats[1][1] = ':_rez:';
+            stats[1][1] = ' :_rez:';
         } else {
             stats[1][1] = ':_credit:';
         }
