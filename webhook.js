@@ -81,9 +81,7 @@ app.post('/', function (req, res) {
     }
 
     if (req.body.command) {
-        if (req.body.command === '/' + triggerCard) {
-            searches[0] = req.body.text;
-        }
+        searches[0] = req.body.text;
     } else if (req.body.trigger_word) {
         searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     } else {
