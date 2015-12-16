@@ -50,6 +50,14 @@ function influenceDots (influence) {
     return dots;
 }
 
+function getPack (code) {
+    var cycle = packs[Math.floor(code/1000)];
+    if (Array.isArray(cycle)) {
+        cycle = cycle[Math.floor(((code % 1000) - 1) / 20)];
+    }
+    return '_\u200b' + cycle + '\u200b_';
+}
+
 exports.formatDecklist = (decklist) => {
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
@@ -57,7 +65,7 @@ exports.formatDecklist = (decklist) => {
     var decksize = 0;
     var agendapoints = 0;
     var fields = [];
-    var newestcard = parseInt(decklist.cards.Identity[0].card.code);
+    var newestCard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = this.formatTitle(decklist.name, decklist.url);
     for (var f in headings) {
         fields[f] = {title: '', value: '', short: true};
@@ -74,8 +82,8 @@ exports.formatDecklist = (decklist) => {
                     fields[f].value += '\n' + card.quantity;
                     fields[f].value += ' × ' + card.card.title;
                     decksize += card.quantity;
-                    if (code > newestcard) {
-                        newestcard = code;
+                    if (code > newestCard) {
+                        newestCard = code;
                     }
                     if (card.card.agendapoints) {
                         agendapoints += card.card.agendapoints * card.quantity;
@@ -99,17 +107,13 @@ exports.formatDecklist = (decklist) => {
     if (decklist.cards.Identity[0].card.side !== 'Runner') {
         o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     }
-    var cycle = packs[Math.floor(newestcard/1000)];
-    if (Array.isArray(cycle)) {
-        cycle = cycle[Math.floor(((newestcard % 1000) - 1) / 20)];
-    }
-    o.attachments[0].pretext += '\n Cards up to _\u200b' + cycle + '\u200b_';
+    o.attachments[0].pretext += '\n Cards up to ' + getPack(newestCard);
     return o;
 };
 
 exports.formatCards = (cards) => {
     var o = {text:'', attachments:[]};
-    for (var i = 0; i < cards.length; i++) {
+    for (var i in cards) {
         var a = {pretext: '', mrkdwn_in: ['pretext', 'text']};
         var faction = cards[i].faction.replace(/(\s|-).*/, '').toLowerCase();
         var title = cards[i].title;
@@ -153,6 +157,7 @@ exports.formatCards = (cards) => {
         a.pretext = a.pretext.replace(/(\d|X)\s*:_mu:/gi, function (x) {
             return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
         });
+        a.pretext += ' - ' + getPack(parseInt(cards[i].code));
         a.color = colours[faction];
         if (cards[i].text) {
             a.text = this.formatText(cards[i].text);
