@@ -27,10 +27,11 @@ function influenceDots (influence) {
 }
 
 exports.formatDecklist = (decklist) => {
-    var o = {text: '', attachments:[{mrkdwn_in: ['text', 'fields']}]};
+    var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
     var decksize = 0;
+    var agendapoints = 0;
     var fields = [];
     o.text = this.formatTitle(decklist.name, decklist.url);
     for (var f in headings) {
@@ -47,6 +48,9 @@ exports.formatDecklist = (decklist) => {
                     fields[f].value += '\n' + card.quantity;
                     fields[f].value += ' × ' + card.card.title;
                     decksize += card.quantity;
+                    if (card.card.agendapoints) {
+                        agendapoints += card.card.agendapoints * card.quantity;
+                    }
                     if (card.card.faction !== faction) {
                         var inf = card.quantity * card.card.factioncost;
                         fields[f].value += ' ' + influenceDots(inf);
@@ -58,11 +62,12 @@ exports.formatDecklist = (decklist) => {
     }
     o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
-    o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].card.title);
-    o.attachments[0].text += '\n' + decksize + ' :_deck: (min ';
-    o.attachments[0].text +=  decklist.cards.Identity[0].card.minimumdecksize;
-    o.attachments[0].text += ') - ' + usedInfluence + '/';
-    o.attachments[0].text += decklist.cards.Identity[0].card.influencelimit + '•';
+    o.attachments[0].pretext = this.formatTitle(decklist.cards.Identity[0].card.title);
+    o.attachments[0].pretext += '\n:_deck: ' + decksize + ' (min ';
+    o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
+    o.attachments[0].pretext += ') - ' + usedInfluence + '/';
+    o.attachments[0].pretext += decklist.cards.Identity[0].card.influencelimit + '•';
+    o.attachments[0].pretext += ' - :_agenda: ' + agendapoints;
     return o;
 };
 
