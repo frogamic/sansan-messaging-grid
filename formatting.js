@@ -13,7 +13,7 @@ var stats = [
     ['strength', ' str'],
     ['trash', ':_trash:'],
     ['advancementcost', ':_advance:'],
-    ['minimumdecksize', ':_deck:'],
+    ['minimumdecksize', ' :_deck:'],
     ['influencelimit', '•'],
     ['agendapoints', ':_agenda:']
 ];
@@ -59,7 +59,7 @@ exports.formatDecklist = (decklist) => {
     o.attachments[0].color = colours[faction.replace(/[-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
     o.attachments[0].text = this.formatTitle(decklist.cards.Identity[0].card.title);
-    o.attachments[0].text += '\n' + decksize + ':_deck:  (min ';
+    o.attachments[0].text += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].text +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].text += ') - ' + usedInfluence + '/';
     o.attachments[0].text += decklist.cards.Identity[0].card.influencelimit + '•';
