@@ -104,7 +104,7 @@ exports.formatCards = (cards) => {
         } else {
             stats[1][1] = ':_credit:';
         }
-        for (j = 0; j < stats.length; j++) {
+        for (var j = 0; j < stats.length; j++) {
             if (cards[i][stats[j][0]] || cards[i][stats[j][0]] === 0) {
                 if (!first) {
                     a.pretext += ' - ';
