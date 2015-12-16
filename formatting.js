@@ -3,7 +3,7 @@ var colours = require('./colours.json');
 
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
-    ['Icebreaker', 'Program', 'ICE']
+    ['Icebreaker', 'Program', 'Barrier', 'Code Gate', 'Sentry', 'Multi', 'Other']
 ];
 
 var stats = [

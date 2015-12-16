@@ -50,15 +50,32 @@ function getDecklist (id) {
             }
             Promise.all(promises).then(function (values) {
                 for (var i in values) {
-                    if (!decklist.cards[values[i].type]) {
-                        decklist.cards[values[i].type] = [];
+                    console.info(values[i].card.title);
+                    var type = values[i].card.type;
+                    if (type === 'ICE') {
+                        var typematch = values[i].card.subtype.match(/(Barrier|Code Gate|Sentry)/g);
+                        console.info(typematch);
+                        if (typematch.length === 0) {
+                            type = 'Other';
+                        } else if (typematch.length > 1) {
+                            type = 'Multi';
+                        } else {
+                            type = typematch[0];
+                        }
+                    } else if (type === 'Program' && values[i].card.subtype
+                            && values[i].card.subtype.match(/Icebreaker/)) {
+                        type = 'Icebreaker';
                     }
-                    decklist.cards[values[i].type].push({
+                    console.info(type);
+                    if (!decklist.cards[type]) {
+                        decklist.cards[type] = [];
+                    }
+                    decklist.cards[type].push({
                         quantity: values[i].quantity, card: values[i].card
                     });
                 }
-                for (var type in decklist.cards) {
-                    decklist.cards[type].sort(function (a, b) {
+                for (var t in decklist.cards) {
+                    decklist.cards[t].sort(function (a, b) {
                         return a.card.title.localeCompare(b.card.title);
                     });
                 }
