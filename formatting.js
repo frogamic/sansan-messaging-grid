@@ -18,6 +18,30 @@ var stats = [
     ['agendapoints', ' :_agenda:']
 ];
 
+var packs = [
+    'Draft',
+    'Core Set',
+    [
+        'What Lies Ahead', 'Trace Amount', 'Cyber Exodus', 'A Study in Static', 'Humanity\'s Shadow', 'Future Proof'
+    ],
+    'Creation and Control',
+    [
+        'Opening Moves', 'Second Thoughts', 'Mala Tempora', 'True Colors', 'Fear and Loathing', 'Double Time'
+    ],
+    'Honor and Profit',
+    [
+        'Upstalk', 'The Spaces Between', 'First Contact', 'Up and Over', 'All That Remains', 'The Source'
+    ], 
+    'Order and Chaos',
+    [
+        'The Valley', 'Breaker Bay', 'Chrome City', 'The Underway', 'Old Hollywood', 'The Universe of Tomorrow'
+    ],
+    'Data and Destiny',
+    [
+        'Kala Ghoda', 'Business First', 'Democracy and Dogma', 'Salsette Island'
+    ]
+];
+
 function influenceDots (influence) {
     var dots = '';
     for (var i = 0; i < influence; i++) {
@@ -33,6 +57,7 @@ exports.formatDecklist = (decklist) => {
     var decksize = 0;
     var agendapoints = 0;
     var fields = [];
+    var newestcard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = this.formatTitle(decklist.name, decklist.url);
     for (var f in headings) {
         fields[f] = {title: '', value: '', short: true};
@@ -45,9 +70,13 @@ exports.formatDecklist = (decklist) => {
                 fields[f].value += this.formatTitle(type);
                 for (var i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
+                    var code = parseInt(card.card.code);
                     fields[f].value += '\n' + card.quantity;
                     fields[f].value += ' × ' + card.card.title;
                     decksize += card.quantity;
+                    if (code > newestcard) {
+                        newestcard = code;
+                    }
                     if (card.card.agendapoints) {
                         agendapoints += card.card.agendapoints * card.quantity;
                     }
@@ -70,6 +99,11 @@ exports.formatDecklist = (decklist) => {
     if (decklist.cards.Identity[0].card.side !== 'Runner') {
         o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     }
+    var cycle = packs[Math.floor(newestcard/1000)];
+    if (Array.isArray(cycle)) {
+        cycle = cycle[Math.floor(((newestcard % 1000) - 1) / 20)];
+    }
+    o.attachments[0].pretext += '\n Cards up to _\u200b' + cycle + '\u200b_';
     return o;
 };
 
