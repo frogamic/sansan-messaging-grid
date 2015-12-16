@@ -62,7 +62,6 @@ app.post('/decklist', function (req, res) {
         nrdb.getDecklist(id).then(function (decklist) {
             res.json(formatting.formatDecklist(decklist));
         }, function (err) {
-            console.log(err);
             res.send('');
         });
     } else {
@@ -94,7 +93,6 @@ app.post('/', function (req, res) {
             nrdb.getDecklist(id).then(function (decklist) {
                 res.json(formatting.formatDecklist(decklist));
             }, function (err) {
-                console.log(err);
                 res.send('');
             });
         } else {
@@ -105,7 +103,12 @@ app.post('/', function (req, res) {
             }
             initpromise.then(function () {
                 findCards(searches).then (function (results) {
-                    res.json(formatting.formatCards(results));
+                    var o = formatting.formatCards(results)
+                    if (o.text !== '') {
+                        res.json(o);
+                    } else {
+                        res.send('');
+                    }
                 }, function (err) {
                     console.log(err);
                     res.sendStatus(500);
