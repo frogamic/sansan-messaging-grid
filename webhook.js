@@ -105,8 +105,8 @@ app.post('/', (req, res) => {
                 res.send('');
             });
         } else {
-            searches.forEach((search) => {
-                search = search.toLowerCase().replace(shorthandRegExp, (sh) => {
+            searches.forEach((search, i) => {
+                searches[i] = search.toLowerCase().replace(shorthandRegExp, (sh) => {
                     return shorthands[sh];
                 });
             });
