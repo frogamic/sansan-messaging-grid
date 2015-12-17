@@ -32,6 +32,18 @@ function getPack(code) {
     return '_\u200b' + cycle + '\u200b_';
 }
 
+function formatLink(text, url) {
+    return '<' + url + '|' + text + '>';
+}
+
+exports.formatTitle = (title, url) => {
+    title = '*\u200b' + title + '\u200b*';
+    if (url && url !== '') {
+        return formatLink(title, url);
+    }
+    return title;
+}
+
 exports.formatDecklist = (decklist) => {
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
@@ -55,7 +67,7 @@ exports.formatDecklist = (decklist) => {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
                     fields[f].value += '\n' + card.quantity;
-                    fields[f].value += ' × <' + card.card.url + '|' + card.card.title + '>';
+                    fields[f].value += ' × ' + formatLink(card.card.title, card.card.url);
                     decksize += card.quantity;
                     if (code > newestCard) {
                         newestCard = code;
@@ -74,7 +86,8 @@ exports.formatDecklist = (decklist) => {
     }
     o.attachments[0].color = colours[faction.replace(/[\-\s].*/, '').toLowerCase()];
     o.attachments[0].fields = fields;
-    o.attachments[0].pretext = exports.formatTitle(decklist.cards.Identity[0].card.title);
+    o.attachments[0].pretext = formatLink(decklist.cards.Identity[0].card.title,
+            decklist.cards.Identity[0].card.url);
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
@@ -148,12 +161,12 @@ exports.formatText = (text) => {
     text = text.replace(/\r\n/g, '\n');
 
     text = text.replace(/\[Credits\]/g, ':_credit:');
-    text = text.replace(/\[Recurring Credits\]/g, ':_recurring-credit:');
+    text = text.replace(/\[Recurring\ Credits\]/g, ':_recurringcredit:');
     text = text.replace(/\[Click\]/g, ':_click:');
-    text = text.replace(/\[Link\]/g, ':_link:');
+    text = text.replace(/\ *\[Link\]/g, ' :_link:');
     text = text.replace(/\[Trash\]/g, ':_trash:');
     text = text.replace(/\[Subroutine\]/g, ':_subroutine:');
-    text = text.replace(/(\d|X)\s*\[Memory Unit\]/gi, function (x) {
+    text = text.replace(/(\d|X)\s*\[Memory\ Unit\]/gi, function (x) {
         return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
     });
     text = text.replace(/\[Memory Unit\]/g, ':_mu:');
@@ -174,13 +187,5 @@ exports.formatText = (text) => {
     text = text.replace(/>/g, '&gt;');
 
     return text;
-}
-
-exports.formatTitle = (title, url) => {
-    title = '*\u200b' + title + '\u200b*';
-    if (url && url !== '') {
-        return '<' + url + '|' + title + '>';
-    }
-    return title;
 }
 
