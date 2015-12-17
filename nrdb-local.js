@@ -2,8 +2,9 @@
 var request = require('request');
 var schedule = require('node-schedule');
 var FuzzySearch = require('fuzzysearch-js');
-var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
+// var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
 var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
+var SiftFS = require('fuzzysearch-js/js/modules/Sift3FS');
 
 var netrunnerCardURL = 'http://netrunnerdb.com/api/cards/';
 var netrunnerDeckURL = 'http://netrunnerdb.com/api/decklist/';
@@ -106,13 +107,14 @@ function getCardByTitle (text) {
             indexPromise.then(function (cardArray) {
                 var results = fuzzySearch.search(text);
                 if (results) {
-                    // for (var i in results) {
-                    //     var details = '   ';
-                    //     for (var j in results[i].details) {
-                    //         details += results[i].details[j].name + ': ' + results[i].details[j].score + ' ';
-                    //     }
-                    //     console.info(i +': ' + results[i].value.title + ' score: ' + results[i].score + '\t\t' + details);
-                    // }
+                    // console.info('\n\nSearching for ' + text);
+                    // results.forEach((result, i) => {
+                    //     var details = '';
+                    //     result.details.forEach((detail) => {
+                    //         details += detail.name + ': ' + detail.score + ' ';
+                    //     });
+                    //     console.info(i +': ' + result.value.title + ' score: ' + result.score + '\t\t' + details);
+                    // });
                     resolve(results[0].value);
                 }else{
                     var acronym = new RegExp(text.replace(/\W/g, '').replace(/(.)/g, '\\b$1.*?'), 'i');
@@ -159,8 +161,9 @@ function init (cardArray) {
                 'termPath': 'title',
                 'minimumScore': 200
             });
-            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 6, 'factor': 1}));
             fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 2}));
+            fuzzySearch.addModule(SiftFS({'maxDistanceTolerance': 6, 'factor': 1}));
+            // fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 6, 'factor': 1}));
             resolve(cardArray);
         }, function (error) {
             reject (error);
