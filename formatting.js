@@ -1,11 +1,11 @@
 'use strict';
 var colours = require('./colours.json');
+var packs = require('./datapacks.json');
 
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
     ['Icebreaker', 'Program', 'Barrier', 'Code Gate', 'Sentry', 'Multi', 'Other']
 ];
-
 var stats = [
     ['baselink', ' :_link:'],
     ['cost', ':_credit:'],
@@ -17,8 +17,7 @@ var stats = [
     ['influencelimit', '•'],
     ['agendapoints', ' :_agenda:']
 ];
-
-var packs = require('./datapacks.json');;
+var thumbsURL = process.env.THUMBS_URL;
 
 function influenceDots(influence) {
     return '•'.repeat(influence);
@@ -150,6 +149,7 @@ exports.formatCards = (cards) => {
         if (cards[i].text) {
             a.text = exports.formatText(cards[i].text);
         }
+        a.thumb_url = thumbsURL + cards[i].code + '.png';
         o.attachments.push(a);
     }
     return o;
