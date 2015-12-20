@@ -35,6 +35,10 @@ function formatLink(text, url) {
     return '<' + url + '|' + text + '>';
 }
 
+function getFactionEmoji(faction) {
+    return ':_' + faction.replace(/\s.*/, '').toLowerCase() + ':';
+}
+
 exports.formatTitle = (title, url) => {
     title = '*\u200b' + title + '\u200b*';
     if (url && url !== '') {
@@ -83,7 +87,7 @@ exports.formatDecklist = (decklist) => {
             }
         }
     }
-    o.attachments[0].color = colours[faction.replace(/[\-\s].*/, '').toLowerCase()];
+    o.attachments[0].color = colours[faction];
     o.attachments[0].fields = fields;
     o.attachments[0].pretext = formatLink(decklist.cards.Identity[0].card.title,
             decklist.cards.Identity[0].card.url);
@@ -102,7 +106,7 @@ exports.formatCards = (cards) => {
     var o = {text:'', attachments:[]};
     for (var i = 0; i < cards.length; i++) {
         var a = {pretext: '', mrkdwn_in: ['pretext', 'text']};
-        var faction = cards[i].faction.replace(/(\s|-).*/, '').toLowerCase();
+        var faction = cards[i].faction;
         var title = cards[i].title;
         if (cards[i].uniqueness){
             title = '◆ ' + title;
@@ -118,7 +122,7 @@ exports.formatCards = (cards) => {
         } else {
             a.pretext += '\u200b*';
         }
-        a.pretext += ' - :_' + faction + ':';
+        a.pretext += ' - ' + getFactionEmoji(faction);
         if (cards[i].factioncost) {
             a.pretext += influenceDots(cards[i].factioncost);
         }
