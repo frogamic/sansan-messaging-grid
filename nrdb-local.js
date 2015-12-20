@@ -2,9 +2,9 @@
 var request = require('request');
 var schedule = require('node-schedule');
 var FuzzySearch = require('fuzzysearch-js');
-// var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
+var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
 var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
-var SiftFS = require('fuzzysearch-js/js/modules/Sift3FS');
+// var SiftFS = require('fuzzysearch-js/js/modules/Sift3FS');
 
 var netrunnerCardURL = 'http://netrunnerdb.com/api/cards/';
 var netrunnerDeckURL = 'http://netrunnerdb.com/api/decklist/';
@@ -162,8 +162,8 @@ function init (cardArray) {
                 'minimumScore': 200
             });
             fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 2}));
-            fuzzySearch.addModule(SiftFS({'maxDistanceTolerance': 6, 'factor': 1}));
-            // fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 6, 'factor': 1}));
+            // fuzzySearch.addModule(SiftFS({'maxDistanceTolerance': 4, 'factor': 1}));
+            fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 4, 'factor': 1}));
             resolve(cardArray);
         }, function (error) {
             reject (error);
