@@ -1,75 +1,81 @@
 #!env python3
-from PIL import Image, ImageOps
-import requests, json, threading
+from PIL import Image, ImageOps, ImageDraw
+import requests, json, threading, math
 from queue import Queue
 from io import BytesIO
 
-NUM_THREADS = 8
+NUM_THREADS = 16
+NRDB_URL = "http://netrunnerdb.com"
+OUTPUT_FOLDER = "./thumbs/"
 
 crops = {
-        "Agenda":(59, 29, 270, 240),
-        "Asset":(49, 0, 251, 202),
-        "Corp":(22, 52, 277, 307),
-        "Event":(41, 28, 258, 245),
-        "Hardware":(42, 3, 258, 219),
-        "ICE":(48, 209, 266, 427),
-        "Operation":(44, 34, 255, 245),
-        "Program":(73, 14, 241, 182),
-        "Resource":(71, 23, 230, 182),
-        "Runner":(29, 50, 269, 290),
-        "Upgrade":(43, -6, 248, 208),
+        "Agenda":(59, 43, 270, 226),
+        "Asset":(44, 12, 256, 195),
+        "Corp":(22, 69, 277, 290),
+        "Event":(41, 43, 258, 230),
+        "Hardware":(42, 17, 258, 205),
+        "ICE":(63, 218, 238, 419),
+        "Operation":(44, 48, 255, 231),
+        "Program":(70, 25, 238, 171),
+        "Resource":(71, 34, 230, 171),
+        "Runner":(27, 55, 274, 269),
+        "Upgrade":(43, 8, 248, 194),
         }
-
-pointytop = ["ICE", "Asset"]
-
-maskf = Image.open("./flattophex.png").convert('L')
-maskp = Image.open("./pointytophex.png").convert('L')
 
 q = Queue()
 
 def worker ():
     while True:
         card = q.get()
-        if card["type"] in pointytop:
-            mask = maskp
-        else:
-            mask = maskf
 
         if card["type"] == "Identity":
             crop = crops[card["side"]]
-            if card["side"] == "Runner":
-                mask = maskp
         else:
             crop = crops[card["type"]]
 
-        res = requests.get("http://netrunnerdb.com" + card["imagesrc"])
+        res = requests.get(NRDB_URL + card["imagesrc"])
         im = Image.open(BytesIO(res.content))
         im = im.crop(crop)
-        im = im.resize((75, 75), Image.ANTIALIAS)
 
         if card["type"] == "ICE":
             im = im.transpose(Image.ROTATE_270)
 
-        output = ImageOps.fit(im, mask.size, Image.ANTIALIAS, centering=(0.5, 0.5))
-        output.putalpha(mask)
-        output = output.crop(output.getbbox())
+        mask = Image.new("L", (im.width * 3, im.height * 3), 0)
+        hexagon = [
+                (0, mask.height / 2),
+                (mask.width / 4, 0),
+                (mask.width / 4 * 3, 0),
+                (mask.width, mask.height / 2),
+                (mask.width / 4 * 3, mask.height),
+                (mask.width / 4, mask.height)]
+        maskdraw = ImageDraw.Draw(mask)
+        maskdraw.polygon(hexagon, fill = 255);
+        mask = mask.resize(im.size, Image.ANTIALIAS)
 
-        output.save("./thumbs/" + card["code"] + ".png")
+        im.putalpha(mask)
+
+        im.save(OUTPUT_FOLDER + card["code"] + ".png", optimize=True)
         q.task_done()
+        print(threading.current_thread().name + " done processing " + card["code"])
 
 def main ():
-    res = requests.get("http://netrunnerdb.com/api/cards")
+    print("Fetching card list")
+    res = requests.get(NRDB_URL + "/api/cards")
     cards = res.json()
 
+    print("Spawning threads")
     for i in range(NUM_THREADS):
-        t = threading.Thread(target=worker)
+        t = threading.Thread(target=worker, name="Thread " + str(i))
         t.daemon = True
         t.start()
 
+    print("Populating queue")
     for card in cards:
-        q.put(card)
+        if card["type"] == "Program":
+            q.put(card)
 
     q.join()
+    print("Task complete")
 
 if __name__ == "__main__":
     main()
