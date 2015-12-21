@@ -19,7 +19,7 @@ crops = {
         "Program":(70, 25, 238, 171),
         "Resource":(71, 34, 230, 171),
         "Runner":(27, 55, 274, 269),
-        "Upgrade":(43, 8, 248, 194),
+        "Upgrade":(31, 0, 271, 209),
         }
 
 q = Queue()
@@ -52,11 +52,14 @@ def worker ():
         maskdraw.polygon(hexagon, fill = 255);
         mask = mask.resize(im.size, Image.ANTIALIAS)
 
-        im.putalpha(mask)
+        output = Image.new("RGBA", (im.width, im.width), color = (255, 255, 255, 0))
+        output.paste(im,
+            box = (0, round((1 - (math.sqrt(3)/2)) / 2 * im.width)),
+            mask = mask)
 
-        im.save(OUTPUT_FOLDER + card["code"] + ".png", optimize=True)
+        output.save(OUTPUT_FOLDER + card["code"] + ".png", compress_level=9)
         q.task_done()
-        print(threading.current_thread().name + " done processing " + card["code"])
+        print(threading.current_thread().name + ":\t" + card["title"] + " processed")
 
 def main ():
     print("Fetching card list")
@@ -71,8 +74,7 @@ def main ():
 
     print("Populating queue")
     for card in cards:
-        if card["type"] == "Program":
-            q.put(card)
+        q.put(card)
 
     q.join()
     print("Task complete")
