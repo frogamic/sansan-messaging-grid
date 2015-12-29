@@ -2,6 +2,27 @@
 var colours = require('./colours.json');
 var packs = require('./datapacks.json');
 
+var thumbsURL = process.env.THUMBS_URL;
+var messages = {
+    noCardHits: [
+        "The run was successful but you didn't access _\u200b[cards]\u200b_.",
+        "I was unable to find _\u200b[cards]\u200b_ in any of my remotes.",
+        "Despite 822 Medium counters, _\u200b[cards]\u200b_ couldn't be found.",
+        "The Near-Earth Hub couldn't locate _\u200b[cards]\u200b_."
+    ],
+    noDeckHits: [
+        "The archetype of that deck would be _\u200bnon-existant\u200b_."
+    ],
+    helpDeck:
+        `Search for a decklist by it's netrunnerdb link or ID number e.g.
+        \`\`\`[command] netrunnerdb\u200b.com/en/decklist/17055/example
+        [command] 12345\`\`\``,
+    helpCard:
+        `Search for a card by (partial) name, approximation or acronym e.g.
+        \`\`\`[command]sneakdoor
+        [command]hiemdal
+        [command]etf\`\`\``
+};
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
     ['Icebreaker', 'Program', 'Barrier', 'Code Gate', 'Sentry', 'Multi', 'Other']
@@ -17,7 +38,6 @@ var stats = [
     ['influencelimit', '•'],
     ['agendapoints', ' :_agenda:']
 ];
-var thumbsURL = process.env.THUMBS_URL;
 
 function influenceDots(influence) {
     return '•'.repeat(influence);
@@ -39,13 +59,58 @@ function getFactionEmoji(faction) {
     return ':_' + faction.replace(/\s.*/, '').toLowerCase() + ':';
 }
 
+function getCardNoHitsMessage(text) {
+    var r = Math.floor(Math.random() * messages.noCardHits.length);
+    return messages.noCardHits[r].replace(/\[cards\]/g, text);
+}
+
+exports.cardHelpMessage = (command) => {
+    if (command) {
+        return {
+            text: messages.helpCard.replace(/\[command\]/g, command + ' ')
+        };
+    }
+    return {
+        text: messages.helpCard.replace(/\[command\](\w+)/g, '[$1]')
+    };
+};
+
+exports.deckHelpMessage = (command) => {
+    return {
+        text: messages.helpDeck.replace(/\[command\]/g, command)
+    };
+};
+
+exports.cardNoHitsMessage = (cards) => {
+    var text;
+    if (cards.length > 2) {
+        text = cards.slice(0, cards.length - 1).join(', ');
+        text += ' or ' + cards[cards.length - 1];
+    } else if (cards.length === 2) {
+        text = cards.join(' or ');
+    } else {
+        text = cards[0];
+    }
+    var message = getCardNoHitsMessage(text);
+    return {
+        text: message
+    };
+};
+
+exports.deckNoHitsMessage = () => {
+    var r = Math.floor(Math.random() * messages.noDeckHits.length);
+    return {
+        text: messages.noDeckHits[r]
+    };
+};
+
 exports.formatTitle = (title, url) => {
     title = '*\u200b' + title + '\u200b*';
     if (url && url !== '') {
         return formatLink(title, url);
     }
     return title;
-}
+};
 
 exports.formatDecklist = (decklist) => {
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
@@ -102,8 +167,14 @@ exports.formatDecklist = (decklist) => {
     return o;
 };
 
-exports.formatCards = (cards) => {
-    var o = {text:'', attachments:[]};
+exports.formatCards = (cards, missing) => {
+    var o;
+    if (missing && missing.length > 0) {
+        o = exports.cardNoHitsMessage(missing);
+        o.attachments = [];
+    } else {
+        o = {text:'', attachments:[]};
+    }
     for (var i = 0; i < cards.length; i++) {
         var a = {pretext: '', mrkdwn_in: ['pretext', 'text']};
         var faction = cards[i].faction;
@@ -111,7 +182,7 @@ exports.formatCards = (cards) => {
         if (cards[i].uniqueness){
             title = '◆ ' + title;
         }
-        if (i === 0) {
+        if (o.text === '') {
             o.text = exports.formatTitle(title, cards[0].url);
         } else {
             a.pretext = exports.formatTitle(title, cards[i].url) + '\n';
@@ -157,7 +228,7 @@ exports.formatCards = (cards) => {
         o.attachments.push(a);
     }
     return o;
-}
+};
 
 exports.formatText = (text) => {
     if (!text) return text;
@@ -191,5 +262,5 @@ exports.formatText = (text) => {
     text = text.replace(/>/g, '&gt;');
 
     return text;
-}
+};
 

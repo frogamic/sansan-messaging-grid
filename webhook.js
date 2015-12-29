@@ -22,12 +22,6 @@ var shorthandRegExp = new RegExp(
     }, '\\b')
 );
 
-var messages = {
-    noCardHits: "The run is successful but you access 0 cards of that name.",
-    noDeckHits: "The archetype of that deck is _\u200bnon-existant\u200b_.",
-    helpDeck: "Search for a decklist by it's netrunnerdb link or ID number e.g.\n```[command] netrunnerdb\u200b.com/en/decklist/17055/example\n[command] 12345```",
-    helpCard: "Search for a card by (partial) name, approximation or acronym e.g.\n```[command] sneakdoor\n[command] hiemdal\n[command] etf```"
-};
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
 
@@ -54,9 +48,16 @@ function findCards(searches) {
     });
     return new Promise((resolve, reject) => {
         Promise.all(promises).then((cards) => {
-            resolve(cards.filter((e) => {
-                return e;
-            }));
+            var hits = [];
+            var misses = [];
+            cards.forEach((card, i) => {
+                if (card) {
+                    hits.push(card);
+                } else {
+                    misses.push(searches[i]);
+                }
+            });
+            resolve({hits: hits, misses: misses});
         }, reject);
     });
 }
@@ -65,12 +66,12 @@ app.post('/decklist', (req, res) => {
     // if (!req.body.token || req.body.token !== token) {
     //     return res.sendStatus(401);
     // }
-    var helpResponse = {text: messages.helpDeck};
+    var helpResponse;
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
-        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.trigger_word);
+        helpResponse = formatting.deckHelpMessage(req.body.trigger_word);
     } else {
-        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.command);
+        helpResponse = formatting.deckHelpMessage(req.body.command);
     }
     var match = req.body.text.match(/(\d+)/);
     if (match) {
@@ -78,7 +79,7 @@ app.post('/decklist', (req, res) => {
         nrdb.getDecklist(id).then((decklist) => {
             res.json(formatting.formatDecklist(decklist));
         }, () => {
-            res.json({text: messages.noDeckHits});
+            res.json(formatting.deckNoHitsMessage());
         });
     } else {
         res.json(helpResponse);
@@ -89,8 +90,7 @@ app.post('/', (req, res) => {
     // if (!req.body.token || req.body.token !== token) {
     //     return res.sendStatus(401);
     // }
-    var response = undefined;
-    var helpResponse = {text: messages.helpCard};
+    var helpResponse = formatting.cardHelpMessage();
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -102,17 +102,15 @@ app.post('/', (req, res) => {
 
     if (req.body.command) {
         searches[0] = req.body.text;
-        response = {text: messages.noCardHits};
-        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.command);
+        helpResponse = formatting.cardHelpMessage(req.body.command);
     } else if (req.body.trigger_word) {
         searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
-        response = {text: messages.noCardHits};
-        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.trigger_word);
+        helpResponse = formatting.cardHelpMessage(req.body.trigger_word);
     } else {
         searches = findSearchStrings(req.body.text);
     }
     if (searches && searches.length > 0) {
-        if (searches[0].toLowerCase() === "help" && response) {
+        if (searches[0].toLowerCase() === "help" && searches.length === 1) {
             return res.json(helpResponse);
         }
         var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
@@ -121,7 +119,7 @@ app.post('/', (req, res) => {
             nrdb.getDecklist(id).then((decklist) => {
                 res.json(formatting.formatDecklist(decklist));
             }, () => {
-                res.send({text: messages.noDeckHits});
+                res.json(formatting.deckNoHitsMessage());
             });
         } else {
             searches.forEach((search, i) => {
@@ -131,11 +129,11 @@ app.post('/', (req, res) => {
             });
             initpromise.then(() => {
                 findCards(searches).then((results) => {
-                    var o = formatting.formatCards(results);
+                    var o = formatting.formatCards(results.hits, results.misses);
                     if (o.text !== '') {
                         res.json(o);
                     } else {
-                        res.json(response);
+                        res.json(formatting.cardNoHitsMessage(searches));
                     }
                 }, (err) => {
                     console.log(err);
