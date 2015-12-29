@@ -7,7 +7,7 @@ var messages = {
     noCardHits: [
         "The run was successful but you didn't access _\u200b[cards]\u200b_.",
         "I was unable to find _\u200b[cards]\u200b_ in any of my remotes.",
-        "Despite 822 Medium counters, _\u200b[cards]\u200b_ couldn't be found.",
+        "Despite 822 Medium counters, _\u200b[cards]\u200b_ wasn't found.",
         "The Near-Earth Hub couldn't locate _\u200b[cards]\u200b_."
     ],
     noDeckHits: [
