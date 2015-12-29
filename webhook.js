@@ -22,6 +22,10 @@ var shorthandRegExp = new RegExp(
     }, '\\b')
 );
 
+var messages = {
+    noHits: {text: "The run is successful but you access 0 cards of that name."},
+    invalidDeck: {text: "Search for a decklist by it's netrunnerdb link or ID number."}
+};
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
 
@@ -68,10 +72,10 @@ app.post('/decklist', (req, res) => {
         nrdb.getDecklist(id).then((decklist) => {
             res.json(formatting.formatDecklist(decklist));
         }, () => {
-            res.send('');
+            res.json(messages.noHits);
         });
     } else {
-        res.send('');
+        res.json(messages.invalidDeck);
     }
 });
 
@@ -79,6 +83,7 @@ app.post('/', (req, res) => {
     // if (!req.body.token || req.body.token !== token) {
     //     return res.sendStatus(401);
     // }
+    var response = {};
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -90,7 +95,9 @@ app.post('/', (req, res) => {
 
     if (req.body.command) {
         searches[0] = req.body.text;
+        response = messages.noHits;
     } else if (req.body.trigger_word) {
+        response = messages.noHits;
         searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     } else {
         searches = findSearchStrings(req.body.text);
@@ -102,7 +109,7 @@ app.post('/', (req, res) => {
             nrdb.getDecklist(id).then((decklist) => {
                 res.json(formatting.formatDecklist(decklist));
             }, () => {
-                res.send('');
+                res.send(messages.noHits);
             });
         } else {
             searches.forEach((search, i) => {
@@ -116,7 +123,7 @@ app.post('/', (req, res) => {
                     if (o.text !== '') {
                         res.json(o);
                     } else {
-                        res.send('');
+                        res.json(response);
                     }
                 }, (err) => {
                     console.log(err);
