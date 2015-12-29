@@ -25,8 +25,8 @@ var shorthandRegExp = new RegExp(
 var messages = {
     noCardHits: "The run is successful but you access 0 cards of that name.",
     noDeckHits: "The archetype of that deck is _\u200bnon-existant\u200b_.",
-    helpDeck: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. `[command] netrunnerdb\u200b.com/en/decklist/17055/example-single-core-c-c-katman` or `[command] 12345`",
-    helpCard: "Search for a card by (partial) name, approximation or acronym\ne.g. `[command] sneakdoor`, `[command] hiemdal` or `[command] etf`"
+    helpDeck: "Search for a decklist by it's netrunnerdb link or ID number e.g.\n```[command] netrunnerdb\u200b.com/en/decklist/17055/example-single-core-c-c-katman\n[command] 12345```",
+    helpCard: "Search for a card by (partial) name, approximation or acronym e.g.\n```[command] sneakdoor\n[command] hiemdal\n[command] etf```"
 };
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
