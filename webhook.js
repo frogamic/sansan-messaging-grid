@@ -23,22 +23,10 @@ var shorthandRegExp = new RegExp(
 );
 
 var messages = {
-    noCardHits: {
-        response_type: "ephemeral",
-        text: "The run is successful but you access 0 cards of that name."
-    },
-    noDeckHits: {
-        response_type: "ephemeral",
-        text: "The archetype of that deck is _\u200bnon-existant\u200b_."
-    },
-    helpDeck: {
-        response_type: "ephemeral",
-        text: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. _\u200bnetrunnerdb\u200b.com/en/decklist/\u200b_\u200b*\u200b12345\u200b*\u200b_\u200b/psycoscorch\u200b_"
-    },
-    helpCard: {
-        response_type: "ephemeral",
-        text: "Search for a card by (partial) name, approximation or acronym\ne.g. nrdb: hiemdal, /nrdb: etf"
-    },
+    noCardHits: "The run is successful but you access 0 cards of that name.",
+    noDeckHits: "The archetype of that deck is _\u200bnon-existant\u200b_.",
+    helpDeck: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. [command] _\u200bnetrunnerdb\u200b.com/en/decklist/\u200b_\u200b*\u200b12345\u200b*\u200b_\u200b/psycoscorch\u200b_",
+    helpCard: "Search for a card by (partial) name, approximation or acronym\ne.g. [command] hiemdal, [command] etf"
 };
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
@@ -77,8 +65,12 @@ app.post('/decklist', (req, res) => {
     // if (!req.body.token || req.body.token !== token) {
     //     return res.sendStatus(401);
     // }
+    var helpResponse = {text: messages.helpDeck};
     if (req.body.trigger_word) {
         req.body.text = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
+        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.trigger_word);
+    } else {
+        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.command);
     }
     var match = req.body.text.match(/(\d+)/);
     if (match) {
@@ -86,10 +78,10 @@ app.post('/decklist', (req, res) => {
         nrdb.getDecklist(id).then((decklist) => {
             res.json(formatting.formatDecklist(decklist));
         }, () => {
-            res.json(messages.noDeckHits);
+            res.json({text: messages.noDeckHits});
         });
     } else {
-        res.json(messages.helpDeck);
+        res.json(helpResponse);
     }
 });
 
@@ -98,6 +90,7 @@ app.post('/', (req, res) => {
     //     return res.sendStatus(401);
     // }
     var response = undefined;
+    var helpResponse = {text: messages.helpCard};
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -109,16 +102,18 @@ app.post('/', (req, res) => {
 
     if (req.body.command) {
         searches[0] = req.body.text;
-        response = messages.noCardHits;
+        response = {text: messages.noCardHits};
+        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.command);
     } else if (req.body.trigger_word) {
-        response = messages.noCardHits;
         searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
+        response = {text: messages.noCardHits};
+        helpResponse.text = helpResponse.text.replace(/\[command\]/g, req.body.trigger_word);
     } else {
         searches = findSearchStrings(req.body.text);
     }
     if (searches && searches.length > 0) {
-        if (searches[0].toLowerCase() === "help" && response !== '') {
-            return res.json(messages.helpCard);
+        if (searches[0].toLowerCase() === "help" && response) {
+            return res.json(helpResponse);
         }
         var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
         if (match) {
@@ -126,7 +121,7 @@ app.post('/', (req, res) => {
             nrdb.getDecklist(id).then((decklist) => {
                 res.json(formatting.formatDecklist(decklist));
             }, () => {
-                res.send(messages.noDeckHits);
+                res.send({text: messages.noDeckHits});
             });
         } else {
             searches.forEach((search, i) => {
