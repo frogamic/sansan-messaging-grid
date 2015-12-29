@@ -31,10 +31,14 @@ var messages = {
         response_type: "ephemeral",
         text: "The archetype of that deck is _\u200bnon-existant\u200b_."
     },
-    invalidDeck: {
+    helpDeck: {
         response_type: "ephemeral",
-        text: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. _\u200b[netrunnerdb\u200b.com/en/decklist/]1234[/psycoscorch]\u200b_"
-    }
+        text: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. _\u200bnetrunnerdb\u200b.com/en/decklist/\u200b_\u200b*\u200b12345\u200b*\u200b_\u200b/psycoscorch\u200b_"
+    },
+    helpCard: {
+        response_type: "ephemeral",
+        text: "Search for a card by (partial) name, approximation or acronym\ne.g. nrdb: hiemdal, /nrdb: etf"
+    },
 };
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
@@ -85,7 +89,7 @@ app.post('/decklist', (req, res) => {
             res.json(messages.noDeckHits);
         });
     } else {
-        res.json(messages.invalidDeck);
+        res.json(messages.helpDeck);
     }
 });
 
@@ -93,14 +97,14 @@ app.post('/', (req, res) => {
     // if (!req.body.token || req.body.token !== token) {
     //     return res.sendStatus(401);
     // }
-    var response = {};
+    var response = undefined;
     var searches = [];
     if (!req.body || Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
     }
 
     if (req.body.user_name === 'slackbot') {
-        return res.sendStatus(200);
+        return res.send('');
     }
 
     if (req.body.command) {
@@ -113,6 +117,9 @@ app.post('/', (req, res) => {
         searches = findSearchStrings(req.body.text);
     }
     if (searches && searches.length > 0) {
+        if (searches[0].toLowerCase() === "help" && response !== '') {
+            return res.json(messages.helpCard);
+        }
         var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
         if (match) {
             var id = match[1];
