@@ -23,8 +23,18 @@ var shorthandRegExp = new RegExp(
 );
 
 var messages = {
-    noHits: {text: "The run is successful but you access 0 cards of that name."},
-    invalidDeck: {text: "Search for a decklist by it's netrunnerdb link or ID number."}
+    noCardHits: {
+        response_type: "ephemeral",
+        text: "The run is successful but you access 0 cards of that name."
+    },
+    noDeckHits: {
+        response_type: "ephemeral",
+        text: "The archetype of that deck is _\u200bnon-existant\u200b_."
+    },
+    invalidDeck: {
+        response_type: "ephemeral",
+        text: "Search for a decklist by it's netrunnerdb link or ID number.\ne.g. _\u200b[netrunnerdb\u200b.com/en/decklist/]1234[/psycoscorch]\u200b_"
+    }
 };
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
@@ -72,7 +82,7 @@ app.post('/decklist', (req, res) => {
         nrdb.getDecklist(id).then((decklist) => {
             res.json(formatting.formatDecklist(decklist));
         }, () => {
-            res.json(messages.noHits);
+            res.json(messages.noDeckHits);
         });
     } else {
         res.json(messages.invalidDeck);
@@ -95,9 +105,9 @@ app.post('/', (req, res) => {
 
     if (req.body.command) {
         searches[0] = req.body.text;
-        response = messages.noHits;
+        response = messages.noCardHits;
     } else if (req.body.trigger_word) {
-        response = messages.noHits;
+        response = messages.noCardHits;
         searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
     } else {
         searches = findSearchStrings(req.body.text);
@@ -109,7 +119,7 @@ app.post('/', (req, res) => {
             nrdb.getDecklist(id).then((decklist) => {
                 res.json(formatting.formatDecklist(decklist));
             }, () => {
-                res.send(messages.noHits);
+                res.send(messages.noDeckHits);
             });
         } else {
             searches.forEach((search, i) => {
