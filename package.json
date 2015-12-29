@@ -6,17 +6,16 @@
   "contributors": [],
   "scripts": {
     "start": "nf start",
-    "test": "mocha tests/*"
+    "test": "mocha tests/*.js"
   },
   "main": "webhook.js",
   "dependencies": {
     "body-parser": "1.14.1",
-    "exact": "^0.1.0",
-    "express": "4.13.x",
+    "express": "4.13.3",
     "foreman": "1.4.1",
     "fuzzysearch-js": "0.2.0",
-    "node-schedule": "^0.6.0",
-    "request": "2.67.x"
+    "node-schedule": "0.6.0",
+    "request": "2.67.0"
   },
   "engines": {
     "node": "5.1.1"
