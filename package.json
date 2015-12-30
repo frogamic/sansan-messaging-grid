@@ -6,7 +6,7 @@
   "contributors": [],
   "scripts": {
     "start": "nf start",
-    "test": "mocha tests/*.js"
+    "test": "istanbul cover _mocha -- tests/*.js"
   },
   "main": "webhook.js",
   "dependencies": {
@@ -36,6 +36,7 @@
     "chai": "*",
     "chai-as-promised": "*",
     "chai-http": "*",
+    "istanbul": "*",
     "mocha": "*"
   },
   "keywords": [
