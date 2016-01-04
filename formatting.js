@@ -13,15 +13,16 @@ var messages = {
     noDeckHits: [
         "The archetype of that deck would be _\u200bnon-existant\u200b_."
     ],
+    helpBrackets:
+        `Search for a card by (partial) name, or acronym, or a decklist by its netrunnerdb link e.g.\
+\`\`\`[sneakdoor] [hiemdal] [etf]
+[netrunnerdb\u200b.com/en/decklist/17055/example]\`\`\``,
     helpDeck:
-        `Search for a decklist by it's netrunnerdb link or ID number e.g.
-        \`\`\`[command] netrunnerdb\u200b.com/en/decklist/17055/example
-        [command] 12345\`\`\``,
+        `Search for a decklist by its netrunnerdb link or ID number e.g.\
+\`\`\`[command] 12345, [command] netrunnerdb\u200b.com/en/decklist/17055/example\`\`\``,
     helpCard:
-        `Search for a card by (partial) name, approximation or acronym e.g.
-        \`\`\`[command]sneakdoor
-        [command]hiemdal
-        [command]etf\`\`\``
+        `Search for a card by (partial) name, approximation or acronym e.g.\
+\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\``
 };
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
@@ -71,7 +72,7 @@ exports.cardHelpMessage = (command) => {
         };
     }
     return {
-        text: messages.helpCard.replace(/\[command\](\w+)/g, '[$1]')
+        text: messages.helpBrackets
     };
 };
 
