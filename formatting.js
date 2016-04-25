@@ -1,4 +1,7 @@
 'use strict';
+
+module.exports = {cardHelpMessage, deckHelpMessage, cardNoHitsMessage, deckNoHitsMessage, formatTitle, formatDecklist, formatCards, formatText};
+
 var colours = require('./colours.json');
 var packs = require('./datapacks.json');
 
@@ -65,7 +68,7 @@ function getCardNoHitsMessage(text) {
     return messages.noCardHits[r].replace(/\[cards\]/g, text);
 }
 
-exports.cardHelpMessage = (command) => {
+function cardHelpMessage(command) {
     if (command) {
         return {
             text: messages.helpCard.replace(/\[command\]/g, command + ' ')
@@ -76,13 +79,13 @@ exports.cardHelpMessage = (command) => {
     };
 };
 
-exports.deckHelpMessage = (command) => {
+function deckHelpMessage(command) {
     return {
         text: messages.helpDeck.replace(/\[command\]/g, command)
     };
 };
 
-exports.cardNoHitsMessage = (cards) => {
+function cardNoHitsMessage(cards) {
     var text;
     if (cards.length > 2) {
         text = cards.slice(0, cards.length - 1).join(', ');
@@ -98,14 +101,14 @@ exports.cardNoHitsMessage = (cards) => {
     };
 };
 
-exports.deckNoHitsMessage = () => {
+function deckNoHitsMessage() {
     var r = Math.floor(Math.random() * messages.noDeckHits.length);
     return {
         text: messages.noDeckHits[r]
     };
 };
 
-exports.formatTitle = (title, url) => {
+function formatTitle(title, url) {
     title = '*\u200b' + title + '\u200b*';
     if (url && url !== '') {
         return formatLink(title, url);
@@ -113,7 +116,7 @@ exports.formatTitle = (title, url) => {
     return title;
 };
 
-exports.formatDecklist = (decklist) => {
+function formatDecklist(decklist) {
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
@@ -121,7 +124,7 @@ exports.formatDecklist = (decklist) => {
     var agendapoints = 0;
     var fields = [];
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
-    o.text = exports.formatTitle(decklist.name, decklist.url);
+    o.text = formatTitle(decklist.name, decklist.url);
     o.text += ' - _\u200b' + decklist.creator + '\u200b_';
     for (let f in headings) {
         fields[f] = {title: '', value: '', short: true};
@@ -131,7 +134,7 @@ exports.formatDecklist = (decklist) => {
                 if (t) {
                     fields[f].value += '\n\n';
                 }
-                fields[f].value += exports.formatTitle(type);
+                fields[f].value += formatTitle(type);
                 for (let i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
@@ -168,10 +171,10 @@ exports.formatDecklist = (decklist) => {
     return o;
 };
 
-exports.formatCards = (cards, missing) => {
+function formatCards(cards, missing) {
     var o;
     if (missing && missing.length > 0) {
-        o = exports.cardNoHitsMessage(missing);
+        o = cardNoHitsMessage(missing);
         o.attachments = [];
     } else {
         o = {text:'', attachments:[]};
@@ -184,9 +187,9 @@ exports.formatCards = (cards, missing) => {
             title = '◆ ' + title;
         }
         if (o.text === '') {
-            o.text = exports.formatTitle(title, cards[0].url);
+            o.text = formatTitle(title, cards[0].url);
         } else {
-            a.pretext = exports.formatTitle(title, cards[i].url) + '\n';
+            a.pretext = formatTitle(title, cards[i].url) + '\n';
         }
         a.pretext += '*\u200b' + cards[i].type;
         if (cards[i].subtype ) {
@@ -223,7 +226,7 @@ exports.formatCards = (cards, missing) => {
         a.pretext += ' - ' + getPack(parseInt(cards[i].code));
         a.color = colours[faction];
         if (cards[i].text) {
-            a.text = exports.formatText(cards[i].text);
+            a.text = formatText(cards[i].text);
         }
         a.thumb_url = thumbsURL + cards[i].code + '.png';
         o.attachments.push(a);
@@ -231,7 +234,7 @@ exports.formatCards = (cards, missing) => {
     return o;
 };
 
-exports.formatText = (text) => {
+function formatText(text) {
     if (!text) return text;
 
     text = text.replace(/\r\n/g, '\n');
