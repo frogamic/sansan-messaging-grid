@@ -17,15 +17,11 @@ var messages = {
         "The archetype of that deck would be _\u200bnon-existant\u200b_."
     ],
     helpBrackets:
-        `Search for a card by (partial) name, or acronym, or a decklist by its netrunnerdb link e.g.\
-\`\`\`[sneakdoor] [hiemdal] [etf]
-[netrunnerdb\u200b.com/en/decklist/17055/example]\`\`\``,
+        "Search for a card by (partial) name, or acronym, or a decklist by its netrunnerdb link e.g.\`\`\`[sneakdoor] [hiemdal] [etf]\n[netrunnerdb\u200b.com/en/decklist/17055/example]\`\`\`",
     helpDeck:
-        `Search for a decklist by its netrunnerdb link or ID number e.g.\
-\`\`\`[command] 12345, [command] netrunnerdb\u200b.com/en/decklist/17055/example\`\`\``,
+        "Search for a decklist by its netrunnerdb link or ID number e.g.\`\`\`[command] 12345, [command] netrunnerdb\u200b.com/en/decklist/17055/example\`\`\`",
     helpCard:
-        `Search for a card by (partial) name, approximation or acronym e.g.\
-\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\``
+        "Search for a card by (partial) name, approximation or acronym e.g.\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\`"
 };
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
@@ -85,13 +81,12 @@ function deckHelpMessage(command) {
     };
 };
 
+// Generates a message indicating that cards weren't found, by concatenating the names with commas and 'or'
 function cardNoHitsMessage(cards) {
     var text;
-    if (cards.length > 2) {
+    if (cards.length >= 2) {
         text = cards.slice(0, cards.length - 1).join(', ');
         text += ' or ' + cards[cards.length - 1];
-    } else if (cards.length === 2) {
-        text = cards.join(' or ');
     } else {
         text = cards[0];
     }
@@ -108,6 +103,7 @@ function deckNoHitsMessage() {
     };
 };
 
+// Makes the title text bold and makes a link if requested
 function formatTitle(title, url) {
     title = '*\u200b' + title + '\u200b*';
     if (url && url !== '') {
@@ -117,39 +113,47 @@ function formatTitle(title, url) {
 };
 
 function formatDecklist(decklist) {
+    // Initialise the return object.
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
     var decksize = 0;
     var agendapoints = 0;
     var fields = [];
+    // Initialise the newestCard var to a card that is guaranteed to be in every deck.
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = formatTitle(decklist.name, decklist.url);
     o.text += ' - _\u200b' + decklist.creator + '\u200b_';
-    for (let f in headings) {
-        fields[f] = {title: '', value: '', short: true};
-        for (let t in headings[f]) {
-            var type = headings[f][t];
+    for (let column in headings) {
+        // Create the columns as Slack 'fields'.
+        fields[column] = {title: '', value: '', short: true};
+        for (let heading in headings[column]) {
+            var type = headings[column][heading];
+            // Check if the deck actually contains cards of the specified heading
             if (decklist.cards[type]) {
-                if (t) {
-                    fields[f].value += '\n\n';
+                // If this is not the first heading, add padding after the previous.
+                if (heading != 0) {
+                    fields[column].value += '\n\n';
                 }
-                fields[f].value += formatTitle(type);
+                fields[column].value += formatTitle(type);
+                // Iterate through all the cards of the type in the decklist.
                 for (let i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
-                    fields[f].value += '\n' + card.quantity;
-                    fields[f].value += ' × ' + formatLink(card.card.title, card.card.url);
+                    fields[column].value += '\n' + card.quantity;
+                    fields[column].value += ' × ' + formatLink(card.card.title, card.card.url);
                     decksize += card.quantity;
+                    // Check that the card is not newer than the previous newest card.
                     if (code > newestCard) {
                         newestCard = code;
                     }
                     if (card.card.agendapoints) {
                         agendapoints += card.card.agendapoints * card.quantity;
                     }
+                    // Add influence dots after the card name if required.
                     if (card.card.faction !== faction) {
                         var inf = card.quantity * card.card.factioncost;
-                        fields[f].value += ' ' + influenceDots(inf);
+                        fields[column].value += ' ' + influenceDots(inf);
                         usedInfluence += inf;
                     }
                 }
@@ -158,6 +162,7 @@ function formatDecklist(decklist) {
     }
     o.attachments[0].color = colours[faction];
     o.attachments[0].fields = fields;
+    // The identity of the decklist is displayed before the decklist.
     o.attachments[0].pretext = formatLink(decklist.cards.Identity[0].card.title,
             decklist.cards.Identity[0].card.url);
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
@@ -173,12 +178,14 @@ function formatDecklist(decklist) {
 
 function formatCards(cards, missing) {
     var o;
+    // If there are cards that could not be found, tell the user.
     if (missing && missing.length > 0) {
         o = cardNoHitsMessage(missing);
         o.attachments = [];
     } else {
         o = {text:'', attachments:[]};
     }
+    // Display the cards that were found either way.
     for (var i = 0; i < cards.length; i++) {
         var a = {pretext: '', mrkdwn_in: ['pretext', 'text']};
         var faction = cards[i].faction;
@@ -186,11 +193,14 @@ function formatCards(cards, missing) {
         if (cards[i].uniqueness){
             title = '◆ ' + title;
         }
+        // If the Slack message is blank, put the title of the first card there.
+        // The Slack API won't display messages with blank text even when there are attachments.
         if (o.text === '') {
             o.text = formatTitle(title, cards[0].url);
         } else {
             a.pretext = formatTitle(title, cards[i].url) + '\n';
         }
+        // Append the rest of the card details to the attachment.
         a.pretext += '*\u200b' + cards[i].type;
         if (cards[i].subtype ) {
             a.pretext += ':\u200b* ' + cards[i].subtype;
@@ -203,28 +213,32 @@ function formatCards(cards, missing) {
         }
         a.pretext += '\n';
         var first = true;
+        // For some cards, the cost is actually a rez cost, this should be reflected in the emoji.
         if (cards[i].type === 'Asset' || cards[i].type === 'Upgrade' || cards[i].type === 'ICE') {
             stats[1][1] = ' :_rez:';
         } else {
             stats[1][1] = ':_credit:';
         }
+        // Iterate through the possible card stats adding them to the text where present.
         for (var j = 0; j < stats.length; j++) {
             if (cards[i][stats[j][0]] || cards[i][stats[j][0]] === 0) {
                 if (!first) {
                     a.pretext += ' - ';
                 }
-
                 a.pretext += cards[i][stats[j][0]] + stats[j][1];
                 first = false;
+            // Special case for draft IDs with infinite influence limit
             } else if (cards[i].type === 'Identity' && stats[j][0] === 'influencelimit' && !cards[i].influencelimit) {
                 a.pretext += ' - ∞•';
             }
         }
+        // Replace memory units with the slack emoji
         a.pretext = a.pretext.replace(/(\d|X)\s*:_mu:/gi, function (x) {
             return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
         });
         a.pretext += ' - ' + getPack(parseInt(cards[i].code));
         a.color = colours[faction];
+        // Add the card text to the attachment if present.
         if (cards[i].text) {
             a.text = formatText(cards[i].text);
         }
@@ -234,24 +248,29 @@ function formatCards(cards, missing) {
     return o;
 };
 
+// Replace all the html and nrdb text with the Slack equivalent.
 function formatText(text) {
     if (!text) return text;
 
     text = text.replace(/\r\n/g, '\n');
 
+    // NRDB symbols to Slack emoji.
     text = text.replace(/\[Credits\]/g, ':_credit:');
     text = text.replace(/\[Recurring\ Credits\]/g, ':_recurringcredit:');
     text = text.replace(/\[Click\]/g, ':_click:');
     text = text.replace(/\ *\[Link\]/g, ' :_link:');
     text = text.replace(/\[Trash\]/g, ':_trash:');
     text = text.replace(/\[Subroutine\]/g, ':_subroutine:');
+    // Individual mu emoji for numbers and 'Xmu'
     text = text.replace(/(\d|X)\s*\[Memory\ Unit\]/gi, function (x) {
         return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
     });
     text = text.replace(/\[Memory Unit\]/g, ':_mu:');
 
+    // HTML bold to Slack bold
     text = text.replace(/<strong>/g, '*\u200b');
     text = text.replace(/<\/strong>/g, '\u200b*');
+    // HTML superscript to unicode superscript since Slack markdown doesn't support it.
     text = text.replace(/<sup>(?:\d|X)+<\/sup>/gi, function(x){
         x = x.replace(/<sup>|<\/sup>/g, '');
         x = x.replace(/X/i,'ˣ');
