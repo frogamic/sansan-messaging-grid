@@ -1,3 +1,7 @@
+/* nrdb-local.js
+ * Written by Dominic Shelton.
+ * Provides functions for searching and storing a local copy of the netrunnedb card database.
+ */
 'use strict';
 var request = require('request');
 var schedule = require('node-schedule');
@@ -22,6 +26,7 @@ module.exports = {
     getDecklist: getDecklist
 };
 
+// Cards in a decklist need a type and quantity, return them via promise.
 function createDecklistCard (code, quantity) {
     return new Promise (function (resolve, reject) {
         getCardByCode(code).then(function (card) {
@@ -52,19 +57,25 @@ function getDecklist (id) {
             Promise.all(promises).then(function (values) {
                 values.forEach((card, i) => {
                     var type = card.card.type;
+                    // The ICE type must be further broken into subtypes.
                     if (type === 'ICE') {
                         var typematch = card.card.subtype.match(/(Barrier|Code\ Gate|Sentry)/g);
                         if (!typematch) {
+                            // The ice matched no standard type
                             type = 'Other';
                         } else if (typematch.length > 1) {
+                            // The ice matched multiple types
                             type = 'Multi';
                         } else {
+                            // The ice matched only a single type
                             type = typematch[0];
                         }
+                    // Likewise Icebreakers must be separated from programs.
                     } else if (type === 'Program' && card.card.subtype
                             && card.card.subtype.match(/Icebreaker/)) {
                         type = 'Icebreaker';
                     }
+                    // Add the card to the array of the correct type.
                     if (!decklist.cards[type]) {
                         decklist.cards[type] = [];
                     }
@@ -86,6 +97,7 @@ function getDecklist (id) {
     });
 }
 
+// Get a card by its nrdb code.
 function getCardByCode (code) {
     return new Promise (function (resolve, reject) {
         initPromise.then(function () {
@@ -98,6 +110,7 @@ function getCardByCode (code) {
     });
 }
 
+// Search for a card by title text (fuzzy)
 function getCardByTitle (text) {
     text = text.trim();
     return new Promise (function (resolve, reject) {
@@ -105,8 +118,10 @@ function getCardByTitle (text) {
             resolve(undefined);
         } else {
             indexPromise.then(function (cardArray) {
+                // Perform a fuzzy search for the card title.
                 var results = fuzzySearch.search(text);
                 if (results) {
+                    // Output the fuzzysearch score for each card found on the console.
                     // console.info('\n\nSearching for ' + text);
                     // results.forEach((result, i) => {
                     //     var details = '';
@@ -115,8 +130,10 @@ function getCardByTitle (text) {
                     //     });
                     //     console.info(i +': ' + result.value.title + ' score: ' + result.score + '\t\t' + details);
                     // });
+                    // Return the best hit.
                     resolve(results[0].value);
                 }else{
+                    // Fall back to an acronym search.
                     var acronym = new RegExp(text.replace(/\W/g, '').replace(/(.)/g, '\\b$1.*?'), 'i');
                     var result = cardArray.find(function (e) {
                         return e.title.match(acronym);
@@ -128,12 +145,15 @@ function getCardByTitle (text) {
     });
 }
 
+// Initialise the local card array
 function init (cardArray) {
+    // Initialised as a promise so requests can be queued while the db is downloading.
     initPromise = new Promise (function (resolve, reject) {
         if (cardArray) {
             console.log('Used passed card DB');
             resolve(cardArray);
         } else {
+            // Load the json data from netrunnerdb.
             request(netrunnerCardURL, function (error, response, body) {
                 if (!error && response.statusCode === 200) {
                     var date = new Date(response.headers.expires);
@@ -142,6 +162,7 @@ function init (cardArray) {
                         scheduledUpdate.cancel();
                     }
                     console.log('Fetched card DB, valid until '+date);
+                    // Schedule the init method to be called again when the data expires.
                     scheduledUpdate = schedule.scheduleJob(date, init);
                     resolve(cardArray);
                 } else {
@@ -151,6 +172,7 @@ function init (cardArray) {
             });
         }
     });
+    // Create another promise for the search indexing of the db so that title searches can be queued.
     indexPromise = new Promise (function (resolve, reject) {
         initPromise.then(function(cardArray) {
             cardArray.forEach((card) => {
