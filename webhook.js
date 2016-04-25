@@ -1,3 +1,7 @@
+/* webhook.js
+ * Written by Dominic Shelton.
+ * An Express based app that listens for queries from a Slack channel and responds with netrunnerdb card info.
+ */
 'use strict';
 var express = require('express');
 var bodyParser = require('body-parser');
