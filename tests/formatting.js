@@ -176,3 +176,33 @@ describe('Card formatting', function () {
     });
 });
 
+describe('Other messages',function(){
+
+    it('should produce the correct message when no cards are found', function (done) {
+        expect(formatting.formatCards([], ["blank"])).to.have.property("text").to.match(/.*blank.*/);
+        expect(formatting.formatCards([], ["blah", "whatsit"])).to.have.property("text").to.match(/.*blah or whatsit.*/);
+        expect(formatting.formatCards([], ["this", "wont", "find"])).to.have.property("text").to.match(/.*this, wont or find.*/);
+        done();
+    });
+    it('should produce the correct message when no decks are found', function (done) {
+        expect(formatting.deckNoHitsMessage()).to.have.property("text").to.equal("The archetype of that deck would be _\u200bnon-existant\u200b_.");
+        done();
+    });
+    it('should produce correct help text for decks', function (done) {
+        expect(formatting.deckHelpMessage("decklist:")).to.have.property("text").to.equal("Search for a decklist by its netrunnerdb link or ID number e.g.\
+\`\`\`decklist: 12345, decklist: netrunnerdb\u200b.com/en/decklist/17055/example\`\`\`");
+        done();
+    });
+    it('should produce correct help text for cards', function (done) {
+        expect(formatting.cardHelpMessage("nrdb:")).to.have.property("text").to.equal("Search for a card by (partial) name, approximation or acronym e.g.\
+\`\`\`nrdb: sneakdoor, nrdb: hiemdal, nrdb: etf\`\`\`");
+        done();
+    });
+    it('should produce correct help text for bracketed commands', function (done) {
+        expect(formatting.cardHelpMessage()).to.have.property("text").to.equal(`Search for a card by (partial) name, or acronym, or a decklist by its netrunnerdb link e.g.\
+\`\`\`[sneakdoor] [hiemdal] [etf]
+[netrunnerdb\u200b.com/en/decklist/17055/example]\`\`\``);
+        done();
+    });
+});
+
