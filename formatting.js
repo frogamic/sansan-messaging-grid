@@ -1,3 +1,7 @@
+/* formating.js
+ * Written by Dominic Shelton.
+ * Provides a number of functions for formatting text, cards and decks on Slack using the Slack API and Markdown.
+ */
 'use strict';
 
 module.exports = {cardHelpMessage, deckHelpMessage, cardNoHitsMessage, deckNoHitsMessage, formatTitle, formatDecklist, formatCards, formatText};
