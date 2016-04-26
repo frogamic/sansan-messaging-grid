@@ -285,8 +285,8 @@ function formatText(text) {
     });
 
     // Replace nrdb faction symbols with Slack emoji
-    text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid)\]/, (x) => {
-        return ":_" + x.replace(/(\[|\]|-.*)/g, '') + ":";
+    text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid)\]/, (a, x) => {
+        return ":_" + x.replace(/-.*/, '') + ":";
     });
 
     text = text.replace(/&/g, '&amp;');
