@@ -10,13 +10,14 @@ var LevenshteinFS = require('fuzzysearch-js/js/modules/LevenshteinFS');
 var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
 // var SiftFS = require('fuzzysearch-js/js/modules/Sift3FS');
 
-var netrunnerCardURL = 'http://netrunnerdb.com/api/cards/';
-var netrunnerDeckURL = 'http://netrunnerdb.com/api/decklist/';
-var netrunnerDeckDisplayURL = 'http://netrunnerdb.com/en/decklist/';
+var netrunnerCardURL = 'https://netrunnerdb.com/api/cards/';
+var netrunnerMWLURL = 'https://netrunnerdb.com/api/get_mwl/';
+var netrunnerDeckURL = 'https://netrunnerdb.com/api/decklist/';
+var netrunnerDeckDisplayURL = 'https://netrunnerdb.com/en/decklist/';
 var cards = {};
 var fuzzySearch;
 var scheduledUpdate;
-var initPromise;
+var loadPromise;
 var indexPromise;
 
 module.exports = {
@@ -100,7 +101,7 @@ function getDecklist (id) {
 // Get a card by its nrdb code.
 function getCardByCode (code) {
     return new Promise (function (resolve, reject) {
-        initPromise.then(function () {
+        loadPromise.then(function () {
             if (cards[code]) {
                 resolve(cards[code]);
             } else {
@@ -148,16 +149,21 @@ function getCardByTitle (text) {
 // Initialise the local card array
 function init (cardArray) {
     // Initialised as a promise so requests can be queued while the db is downloading.
-    initPromise = new Promise (function (resolve, reject) {
+    loadPromise = new Promise (function (resolve, reject) {
         if (cardArray) {
             console.log('Used passed card DB');
             resolve(cardArray);
         } else {
             // Load the json data from netrunnerdb.
             request(netrunnerCardURL, function (error, response, body) {
-                if (!error && response.statusCode === 200) {
+                if (error || response.statusCode !== 200) {
+                    console.error('Failed to fetch card DB: status', response.statusCode);
+                    reject (error);
+                } else {
+                    // Find out when the data expires from the HTTP Header.
                     var date = new Date(response.headers.expires);
                     cardArray = JSON.parse(body);
+                    // Cancel any other updates as only the newest is necessary.
                     if (scheduledUpdate) {
                         scheduledUpdate.cancel();
                     }
@@ -165,19 +171,39 @@ function init (cardArray) {
                     // Schedule the init method to be called again when the data expires.
                     scheduledUpdate = schedule.scheduleJob(date, init);
                     resolve(cardArray);
-                } else {
-                    console.error('Failed to fetch card DB: error %u', response.statusCode);
-                    reject (error);
                 }
             });
         }
     });
+    // Create a new promise for the most-wanted-list
+    var mwlPromise = new Promise ((resolve, reject) => {
+        loadPromise.then(() => {
+            // Fetch the Most Wanted List from the NetrunnerDB API
+            request(netrunnerMWLURL, (error, response, body) => {
+                if (error || response.statusCode !== 200) {
+                    console.error('Failed to fetch Most Wanted List: status', response.statusCode);
+                    reject (error);
+                } else {
+                    console.log('Fetched Most Wanted List');
+                    resolve(JSON.parse(body).data[0].cards);
+                }
+            });
+        });
+    });
     // Create another promise for the search indexing of the db so that title searches can be queued.
-    indexPromise = new Promise (function (resolve, reject) {
-        initPromise.then(function(cardArray) {
+    indexPromise = new Promise ((resolve, reject) => {
+        Promise.all([loadPromise, mwlPromise]).then((results) => {
+            var cardArray = results[0];
+            var mwl = results[1];
             cardArray.forEach((card) => {
+                // Add a mwl flag to each card on the Most Wanted List.
+                if(mwl[card.code]) {
+                    card.mwl = mwl[card.code];
+                }
+                // Add the card to the card sparse array for quick lookup.
                 cards[card.code] = card;
             });
+            // Index the CardArray.
             fuzzySearch = new FuzzySearch(cardArray, {
                 'caseSensitive': false,
                 'termPath': 'title',
@@ -186,8 +212,9 @@ function init (cardArray) {
             fuzzySearch.addModule(IndexOfFS({'minTermLength': 3, 'maxIterations': 500, 'factor': 2}));
             // fuzzySearch.addModule(SiftFS({'maxDistanceTolerance': 4, 'factor': 1}));
             fuzzySearch.addModule(LevenshteinFS({'maxDistanceTolerance': 4, 'factor': 1}));
+            console.log('Cards indexed');
             resolve(cardArray);
-        }, function (error) {
+        }, (error) => {
             reject (error);
         });
     });
