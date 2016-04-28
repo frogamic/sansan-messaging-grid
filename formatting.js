@@ -121,6 +121,7 @@ function formatDecklist(decklist) {
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
     var usedInfluence = 0;
+    var mwlDeduction = 0;
     var decksize = 0;
     var agendapoints = 0;
     var fields = [];
@@ -154,6 +155,13 @@ function formatDecklist(decklist) {
                     if (card.card.agendapoints) {
                         agendapoints += card.card.agendapoints * card.quantity;
                     }
+                    // Add MWL star if required.
+                    if (card.card.mwl)
+                    {
+                        var mwl = card.quantity * card.card.mwl;
+                        fields[column].value += ' ' + '☆'.repeat(mwl);
+                        mwlDeduction += mwl;
+                    }
                     // Add influence dots after the card name if required.
                     if (card.card.faction !== faction) {
                         var inf = card.quantity * card.card.factioncost;
@@ -172,7 +180,15 @@ function formatDecklist(decklist) {
     o.attachments[0].pretext += '\n' + decksize + ' :_deck: (min ';
     o.attachments[0].pretext +=  decklist.cards.Identity[0].card.minimumdecksize;
     o.attachments[0].pretext += ') - ' + usedInfluence + '/';
-    o.attachments[0].pretext += (decklist.cards.Identity[0].card.influencelimit || '∞') + '•';
+    if (decklist.cards.Identity[0].card.influencelimit) {
+        o.attachments[0].pretext += decklist.cards.Identity[0].card.influencelimit - mwlDeduction + '•';
+        if (mwlDeduction > 0) {
+            o.attachments[0].pretext += '(' + decklist.cards.Identity[0].card.influencelimit + '-';
+            o.attachments[0].pretext += mwlDeduction + '☆)';
+        }
+    } else {
+        o.attachments[0].pretext += '∞•';
+    }
     if (decklist.cards.Identity[0].card.side !== 'Runner') {
         o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     }
