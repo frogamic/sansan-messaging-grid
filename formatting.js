@@ -215,6 +215,9 @@ function formatCards(cards, missing) {
         if (cards[i].factioncost) {
             a.pretext += influenceDots(cards[i].factioncost);
         }
+        if (cards[i].mwl) {
+            a.pretext += '☆';
+        }
         a.pretext += '\n';
         var first = true;
         // For some cards, the cost is actually a rez cost, this should be reflected in the emoji.
