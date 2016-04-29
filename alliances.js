@@ -6,7 +6,7 @@
 
 module.exports = {
     10013 : nonAllianceCards.bind(undefined, "Jinteki", 6),
-    10018 : undefined,
+    10018 : mumbaTemple,
     10019 : undefined,
     10029 : nonAllianceCards.bind(undefined, "Haas-Bioroid", 6),
     10038 : undefined,
@@ -22,7 +22,6 @@ function nonAllianceCards (faction, minCards, decklist) {
     var factionCards = 0;
     Object.keys(decklist.cards).forEach((type) => {
         decklist.cards[type].forEach((card) => {
-            console.info("Checking card", card.card.title);
             if (card.card.faction == faction && (!card.card.subtype || card.card.subtype.indexOf("Alliance") == -1)) {
                 factionCards += card.quantity;
 
@@ -35,3 +34,20 @@ function nonAllianceCards (faction, minCards, decklist) {
         return 1;
     }
 };
+
+function mumbaTemple (decklist) {
+    var ice = 0;
+    ["Barrier", "Code Gate", "Sentry", "Other", "Multi"].forEach((type) => {
+        if (decklist.cards[type]) {
+            decklist.cards[type].forEach((card) => {
+                ice += card.quantity;
+            });
+        }
+    });
+    if (ice <= 15) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
