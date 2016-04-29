@@ -8,6 +8,7 @@ module.exports = {cardHelpMessage, deckHelpMessage, cardNoHitsMessage, deckNoHit
 
 var colours = require('./colours.json');
 var packs = require('./datapacks.json');
+var alliances = require('./alliances.js');
 
 var thumbsURL = process.env.THUMBS_URL;
 var messages = {
@@ -165,6 +166,9 @@ function formatDecklist(decklist) {
                     // Add influence dots after the card name if required.
                     if (card.card.faction !== faction) {
                         var inf = card.quantity * card.card.factioncost;
+                        if (alliances[card.card.code]) {
+                            inf *= alliances[card.card.code](decklist);
+                        }
                         fields[column].value += ' ' + influenceDots(inf);
                         usedInfluence += inf;
                     }
