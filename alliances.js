@@ -7,7 +7,7 @@
 module.exports = {
     10013 : nonAllianceCards.bind(undefined, "Jinteki", 6),
     10018 : mumbaTemple,
-    10019 : undefined,
+    10019 : museumOfHistory,
     10029 : nonAllianceCards.bind(undefined, "Haas-Bioroid", 6),
     10038 : undefined,
     10067 : nonAllianceCards.bind(undefined, "Haas-Bioroid", 6),
@@ -45,6 +45,22 @@ function mumbaTemple (decklist) {
         }
     });
     if (ice <= 15) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+function museumOfHistory (decklist) {
+    var totalCards = 0;
+    Object.keys(decklist.cards).forEach((type) => {
+        decklist.cards[type].forEach(card => {
+            totalCards += card.quantity;
+        });
+    });
+    // Minus 1 for the identity which doesn't count towards the total cards.
+    totalCards -= 1;
+    if (totalCards >= 50) {
         return 0;
     } else {
         return 1;
