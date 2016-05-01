@@ -6,4 +6,4 @@ Instructions on using this bot in your own Slack channel are coming soon.
 
 Usage instructions and examples can be found at [anrnz.com](http://www.anrnz.com/p/slack.html) until full project documentation is published on Github Pages.
 
-In the meantime, partial API documentation can be viewed at frogamic.github.io/sansan-messaging-grid/api/
+In the meantime, partial API documentation can be viewed at https://frogamic.github.io/sansan-messaging-grid/api/
