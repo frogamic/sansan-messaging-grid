@@ -212,7 +212,7 @@ module.exports.formatDecklist = (decklist) => {
                 if (heading != 0) {
                     fields[column].value += '\n\n';
                 }
-                fields[column].value += formatTitle(type + ' (' + typeTotal + ')');
+                fields[column].value += formatTitle(type) + ' (' + typeTotal + ')';
                 fields[column].value += text;
             }
         }
