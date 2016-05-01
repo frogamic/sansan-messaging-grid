@@ -1,5 +1,5 @@
 /**
- * Provides a number of functions for calculating the influence cost of alliance cards in decks.
+ * Exports functions for calculating the influence cost of alliance cards in decks. To check if a card's influence can be checked, you should check if the function with the card's NRDB code exists in this module.
  * @module alliances
  * @author Dominic Shelton.
  */

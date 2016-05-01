@@ -17,7 +17,7 @@ var colours = require('./colours.json');
 var packs = require('./datapacks.json');
 /**
  * @var {module} alliances
- * The alliances module is required for calculating the decklist influence total.
+ * The {@link alliances} module is required for calculating the decklist influence total.
  */
 var alliances = require('./alliances.js');
 /**
