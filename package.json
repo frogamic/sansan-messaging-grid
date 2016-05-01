@@ -33,6 +33,7 @@
     "test": "./tests"
   },
   "devDependencies": {
+    "jsdoc": "*",
     "chai": "*",
     "chai-as-promised": "*",
     "chai-http": "*",
