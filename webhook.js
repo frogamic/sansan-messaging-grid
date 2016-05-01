@@ -28,6 +28,10 @@ var shorthandRegExp = new RegExp(
 
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
+var authorizedTeams = process.env.AUTHORIZED_TEAMS || undefined;
+if (authorizedTeams) {
+    authorizedTeams = authorizedTeams.toLowerCase().split(',');
+}
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -72,9 +76,10 @@ function findCards(searches) {
 
 // Listen on the /decklist url for decklist requests.
 app.post('/decklist', (req, res) => {
-    // if (!req.body.token || req.body.token !== token) {
-    //     return res.sendStatus(401);
-    // }
+    if (!req.body.team_domain ||
+            (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+        return res.sendStatus(401);
+    }
     // Get the decklist url from the query text.
     var match = req.body.text.match(/(\d+)/);
     if (match) {
@@ -97,9 +102,10 @@ app.post('/decklist', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-    // if (!req.body.token || req.body.token !== token) {
-    //     return res.sendStatus(401);
-    // }
+    if (!req.body.team_domain ||
+            (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+        return res.sendStatus(401);
+    }
     var helpResponse = formatting.cardHelpMessage();
     var searches = [];
     // Reject queries with empty bodies.
