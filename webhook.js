@@ -32,6 +32,7 @@ var authorizedTeams = process.env.AUTHORIZED_TEAMS || undefined;
 if (authorizedTeams) {
     authorizedTeams = authorizedTeams.toLowerCase().split(',');
 }
+var unauthorizedMessage = {text: "Unauthorized access detected.\n:_subroutine: End the run.\n:_subroutine: End the run."};
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -78,7 +79,7 @@ function findCards(searches) {
 app.post('/decklist', (req, res) => {
     if (!req.body.team_domain ||
             (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
-        return res.sendStatus(401);
+        return res.json(unauthorizedMessage);
     }
     // Get the decklist url from the query text.
     var match = req.body.text.match(/(\d+)/);
@@ -104,7 +105,7 @@ app.post('/decklist', (req, res) => {
 app.post('/', (req, res) => {
     if (!req.body.team_domain ||
             (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
-        return res.sendStatus(401);
+        return res.json(unauthorizedMessage);
     }
     var helpResponse = formatting.cardHelpMessage();
     var searches = [];
