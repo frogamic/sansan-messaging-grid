@@ -1,16 +1,34 @@
-/* formating.js
- * Written by Dominic Shelton.
+/**
  * Provides a number of functions for formatting text, cards and decks on Slack using the Slack API and Markdown.
+ * @module  formating
+ * @author  Dominic Shelton.
  */
 'use strict';
 
-module.exports = {cardHelpMessage, deckHelpMessage, cardNoHitsMessage, deckNoHitsMessage, formatTitle, formatDecklist, formatCards, formatText};
-
+/**
+ * @var {object} colours
+ * The faction colours are loaded from a JSON file.
+ */
 var colours = require('./colours.json');
+/**
+ * @var {string[]|string[][]} packs 
+ * The pack and cycle names are loaded from a JSON file.
+ */
 var packs = require('./datapacks.json');
+/**
+ * @var {module} alliances
+ * The alliances module is required for calculating the decklist influence total.
+ */
 var alliances = require('./alliances.js');
-
+/**
+ * @var {string} thumbsURL
+ * The URL where the card thumbnails are hosted, loaded from the environment variable THUMBS_URL
+ */
 var thumbsURL = process.env.THUMBS_URL;
+/**
+ * @var {object}  messages
+ * Various text messages conveniently combined into one object.
+ */
 var messages = {
     noCardHits: [
         "The run was successful but you didn't access _\u200b[cards]\u200b_.",
@@ -28,10 +46,18 @@ var messages = {
     helpCard:
         "Search for a card by (partial) name, approximation or acronym e.g.\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\`"
 };
+/**
+ * @var {string[][]}    headings
+ * Headings used in Decklists, in the order they appear in the decklist output.
+ */
 var headings = [
     ['Event', 'Hardware', 'Resource', 'Agenda', 'Asset', 'Upgrade', 'Operation'],
     ['Icebreaker', 'Program', 'Barrier', 'Code Gate', 'Sentry', 'Multi', 'Other']
 ];
+/**
+ * @var {string[][]}    stats
+ * An array of pairs of card stats and corresponding emoji, in the order they should appear in card descriptions.
+ */
 var stats = [
     ['baselink', ' :_link:'],
     ['cost', ':_credit:'],
@@ -44,31 +70,12 @@ var stats = [
     ['agendapoints', ' :_agenda:']
 ];
 
-function influenceDots(influence) {
-    return '•'.repeat(influence);
-}
-
-function getPack(code) {
-    var cycle = packs[Math.floor(code/1000)];
-    if (Array.isArray(cycle)) {
-        cycle = cycle[Math.floor(((code % 1000) - 1) / 20)];
-    }
-    return '_\u200b' + cycle + '\u200b_';
-}
-
-function formatLink(text, url) {
-    return '<' + url + '|' + text + '>';
-}
-
-function getFactionEmoji(faction) {
-    return ':_' + faction.replace(/\s.*/, '').toLowerCase() + ':';
-}
-
-function getCardNoHitsMessage(text) {
-    var r = Math.floor(Math.random() * messages.noCardHits.length);
-    return messages.noCardHits[r].replace(/\[cards\]/g, text);
-}
-
+/**
+ * @func cardHelpMessage
+ * @param   command {string}    The Slack command that was used to invoke the help request, used in the examples returned. Can be left blank to invoke the fallback brackets help text.
+ * @return  {object}    A Slack API message object of a help response message.
+ */
+module.exports.cardHelpMessage = cardHelpMessage;
 function cardHelpMessage(command) {
     if (command) {
         return {
@@ -80,13 +87,25 @@ function cardHelpMessage(command) {
     };
 };
 
+/**
+ * @func deckHelpMessage
+ * @param   command {string}    The Slack command that was used to invoke the help request, used in the examples returned.
+ * @return  {object}    A Slack API message object of a help response message.
+ */
+module.exports.deckHelpMessage = deckHelpMessage;
 function deckHelpMessage(command) {
     return {
         text: messages.helpDeck.replace(/\[command\]/g, command)
     };
 };
 
-// Generates a message indicating that cards weren't found, by concatenating the names with commas and 'or'
+/**
+ * Generates a message indicating that cards weren't found, by concatenating the names with commas and 'or'
+ * @func cardNoHitsMessage
+ * @param   cards   {string[]}  An array of card titles that weren't found.
+ * @return  {string}    A randomized Slack API message object stating that the given cards weren't found.
+ */
+module.exports.cardNoHitsMessage = cardNoHitsMessage;
 function cardNoHitsMessage(cards) {
     var text;
     if (cards.length >= 2) {
@@ -101,6 +120,12 @@ function cardNoHitsMessage(cards) {
     };
 };
 
+/**
+ * Generates a message indicating that a deck wasn't found.
+ * @func deckNoHitsMessage
+ * @return  {string}    A randomized Slack API message object stating that the deck wasn't found.
+ */
+module.exports.deckNoHitsMessage = deckNoHitsMessage;
 function deckNoHitsMessage() {
     var r = Math.floor(Math.random() * messages.noDeckHits.length);
     return {
@@ -108,7 +133,14 @@ function deckNoHitsMessage() {
     };
 };
 
-// Makes the title text bold and makes a link if requested
+/**
+ * Applies Slack markdown formatting to the given title to bolden and optionally apply the link.
+ * @func    formatTitle
+ * @param   title   {string}    The text to display as the title.
+ * @param   [url]   {string}    The URL to link the title to.
+ * @return  {string}    A string containing the title with Slack markdown formatting applied.
+ */
+module.exports.formatTitle = formatTitle;
 function formatTitle(title, url) {
     title = '*\u200b' + title + '\u200b*';
     if (url && url !== '') {
@@ -117,7 +149,12 @@ function formatTitle(title, url) {
     return title;
 };
 
-function formatDecklist(decklist) {
+/**
+ * @func    formatDecklist
+ * @param   decklist    {object}    The decklist to be converted into a Slack message.
+ * @return  {object}    A Slack API message object containing the decklist or an error message.
+ */
+module.exports.formatDecklist = (decklist) => {
     // Initialise the return object.
     var o = {text: '', attachments:[{mrkdwn_in: ['pretext', 'fields']}]};
     var faction = decklist.cards.Identity[0].card.faction;
@@ -200,7 +237,13 @@ function formatDecklist(decklist) {
     return o;
 };
 
-function formatCards(cards, missing) {
+/**
+ * @func    formatCards
+ * @param   [cards] {object[]}  The cards to be converted into a Slack message.
+ * @param   [cards] {object[]}  The cards that weren't found and should be mentioned in an error message.
+ * @return  {object}    A Slack API Message object either containing the cards as attachments or containing an error message that the cards couldn't be found, or both.
+ */
+module.exports.formatCards = (cards, missing) => {
     var o;
     // If there are cards that could not be found, tell the user.
     if (missing && missing.length > 0) {
@@ -275,7 +318,13 @@ function formatCards(cards, missing) {
     return o;
 };
 
-// Replace all the html and nrdb text with the Slack equivalent.
+/**
+ * Replace all the html and nrdb text with the Slack equivalent.
+ * @func    formatText
+ * @param   text    {string}    The body of text to convert to Slack formatting.
+ * @return  {string}    The text, formatted in Slack markdown syntax.
+ */
+module.exports.formatText = formatText;
 function formatText(text) {
     if (!text) return text;
 
@@ -309,7 +358,7 @@ function formatText(text) {
 
     // Replace nrdb faction symbols with Slack emoji
     text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid)\]/, (a, x) => {
-        return ":_" + x.replace(/-.*/, '') + ":";
+        return ":_" + getFactionEmoji(x) + ":";
     });
 
     text = text.replace(/&/g, '&amp;');
@@ -318,4 +367,29 @@ function formatText(text) {
 
     return text;
 };
+
+function influenceDots(influence) {
+    return '•'.repeat(influence);
+}
+
+function getPack(code) {
+    var cycle = packs[Math.floor(code/1000)];
+    if (Array.isArray(cycle)) {
+        cycle = cycle[Math.floor(((code % 1000) - 1) / 20)];
+    }
+    return '_\u200b' + cycle + '\u200b_';
+}
+
+function formatLink(text, url) {
+    return '<' + url + '|' + text + '>';
+}
+
+function getFactionEmoji(faction) {
+    return ':_' + faction.replace(/\s.*/, '').toLowerCase() + ':';
+}
+
+function getCardNoHitsMessage(text) {
+    var r = Math.floor(Math.random() * messages.noCardHits.length);
+    return messages.noCardHits[r].replace(/\[cards\]/g, text);
+}
 
