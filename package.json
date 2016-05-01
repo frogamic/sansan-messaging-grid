@@ -5,6 +5,7 @@
   "author": "Dominic Shelton <frogamic@gmail.com>",
   "contributors": [],
   "scripts": {
+    "jsdoc": "jsdoc --configure jsdoc.json --verbose",
     "start": "nf start",
     "test": "istanbul cover _mocha -- tests/*.js"
   },
@@ -33,11 +34,12 @@
     "test": "./tests"
   },
   "devDependencies": {
-    "jsdoc": "*",
     "chai": "*",
     "chai-as-promised": "*",
     "chai-http": "*",
     "istanbul": "*",
+    "jsdoc": "*",
+    "minami": "*",
     "mocha": "*"
   },
   "keywords": [

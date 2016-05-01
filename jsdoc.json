@@ -1,0 +1,10 @@
+{
+  "source": {
+      "include": ".",
+      "includePattern": ".js$"
+  },
+  "opts": {
+    "destination": "./gh-pages/api/",
+    "template": "./node_modules/minami"
+  }
+}
