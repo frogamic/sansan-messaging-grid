@@ -174,17 +174,15 @@ module.exports.formatDecklist = (decklist) => {
             var type = headings[column][heading];
             // Check if the deck actually contains cards of the specified heading
             if (decklist.cards[type]) {
-                // If this is not the first heading, add padding after the previous.
-                if (heading != 0) {
-                    fields[column].value += '\n\n';
-                }
-                fields[column].value += formatTitle(type);
+                var typeTotal = 0;
+                var text = '';
                 // Iterate through all the cards of the type in the decklist.
                 for (let i in decklist.cards[type]) {
                     var card = decklist.cards[type][i];
                     var code = parseInt(card.card.code);
-                    fields[column].value += '\n' + card.quantity;
-                    fields[column].value += ' × ' + formatLink(card.card.title, card.card.url);
+                    typeTotal += card.quantity;
+                    text += '\n' + card.quantity;
+                    text += ' × ' + formatLink(card.card.title, card.card.url);
                     decksize += card.quantity;
                     // Check that the card is not newer than the previous newest card.
                     if (code > newestCard) {
@@ -197,7 +195,7 @@ module.exports.formatDecklist = (decklist) => {
                     if (card.card.mwl)
                     {
                         var mwl = card.quantity * card.card.mwl;
-                        fields[column].value += ' ' + '☆'.repeat(mwl);
+                        text += ' ' + '☆'.repeat(mwl);
                         mwlDeduction += mwl;
                     }
                     // Add influence dots after the card name if required.
@@ -206,10 +204,16 @@ module.exports.formatDecklist = (decklist) => {
                         if (alliances[card.card.code]) {
                             inf *= alliances[card.card.code](decklist);
                         }
-                        fields[column].value += ' ' + influenceDots(inf);
+                        text += ' ' + influenceDots(inf);
                         usedInfluence += inf;
                     }
                 }
+                // If this is not the first heading, add padding after the previous.
+                if (heading != 0) {
+                    fields[column].value += '\n\n';
+                }
+                fields[column].value += formatTitle(type + ' (' + typeTotal + ')');
+                fields[column].value += text;
             }
         }
     }
