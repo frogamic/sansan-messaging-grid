@@ -1,10 +1,101 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <script language="javascript">
-      window.location.href = "api/"
-    </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="frogamic">
+    <link rel="icon" href="https://getbootstrap.com/favicon.ico">
+
+    <title>SanSan Messaging Grid</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="https://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jumbotron-narrow.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="https://getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="https://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+    blockquote { border-left: 8px solid #ffb900; }
+    </style>
   </head>
+
   <body>
-    <a href="api/">You should have been redirected to the API doc, click here if you haven't.</a>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation"><a class="text-muted" href="api/index.html">API</a></li>
+            <li role="presentation"><a class="text-muted" href="https://github.com/frogamic/sansan-messaging-grid">GitHub</a></li>
+          </ul>
+        </nav>
+        <h3><a class="text-muted" href="https://frogamic.github.io/sansan-messaging-grid/">SanSan Messaging Grid</a></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>SanSan Messaging Grid</h1>
+        <p class="lead">Upgrade: Region • Rez: 0 • Trash: 0 • Influence: 0</p>
+        <blockquote>
+          <p>During conversations on this server, a user may request card or decklist information which will be presented in a beautiful manner consistent with <a href="https://netrunnerdb.com">netrunnerdb</a>.</p>
+        </blockquote>
+        <p class="text-center"><a class="btn btn-lg btn-danger" href="usage.html" role="button">Spend a click to access this upgrade's usage doc</a>&nbsp;<a class="btn btn-lg btn-primary" href="setup.html" role="button">Spend a click to install this in the root of HQ now</a></p>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h3>What is SanSan Messaging Grid?</h3>
+          <p class="lead">SanSan Messaging Grid is a Node.js server that responds to Slack API queries with beautifully formatted Android: Netrunner card information.</p>
+
+          <h3><a href="gallery.html">What can it do?</a></h3>
+          <p class="lead">SanSan Messaging Grid can serve Android: Netrunner cards and decklists to Slack channels. Both include stats from the NAPD Most Wanted List, and decklists are capable of handling the influence of all <strong>Alliance</strong> cards up to <em>Ibrahim Salem</em>.</p>
+          <p class="lead text-muted">Check out the <a href="gallery.html">gallery</a> for a preview of how it looks.</a>
+
+          <h3><a href="api/index.html">How does it work?</a></h3>
+          <p class="lead">On launch, the entire Netrunner card database is fetched using the <a href="https://netrunnerdb.com/en/apidoc">netrunnerdb API</a> and indexed using a <a href="https://www.npmjs.com/package/fuzzysearch-js">fuzzy search</a> algorithm to be queried at anytime.</p>
+          <p class="lead text-muted">Check out the full API documentation <a href="api/index.html">here</a></p>
+        </div>
+
+        <div class="col-lg-6">
+          <h3><a href="usage.html">How do I use it?</a></h3>
+          <p class="lead">SanSan Messaging Grid responds to slash-commands <code>/nrdb</code>, <code>/deck</code>, triggers <code>nrdb:</code>, <code>deck:</code>, and card names embedded within messages in square brackets <code>[card-name]</code>.
+          The commands given above are just suggestions, they may be configured by the administrator of your Slack channel.</p>
+          <p class="lead text-muted">Read the full user tutorial <a href="usage.html">here</a>.</p>
+
+          <h3><a href="setup.html">How can I add it to my Slack channel?</a></h3>
+          <p class="lead">To integrate SanSan Messaging Grid with your own Slack channel, you will need to host the server somewhere. As much as I would like to host a single instance for community use, server pricing makes that infeasible. Setting up your own <a href="https://heroku.com">Heroku</a> instance is as easy as making an account, cloning from GitHub and pushing to your Heroku container.</p>
+          <p class="lead text-muted">Read the full administrator tutorial <a href="setup.html">here</a>.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p class="text-center">Website built with <a href="https://getbootstrap.com">Bootstrap</a> and hosted on <a href="https://pages.github.com">GitHub Pages</a>.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   </body>
 </html>
+
