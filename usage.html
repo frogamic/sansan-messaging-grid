@@ -10,6 +10,12 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="https://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jumbotron-narrow.css" rel="stylesheet">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -18,7 +24,24 @@
     <![endif]-->
   </head>
   <body>
-    <h1>Usage information coming soon.</h1>
+    <div class="container">
+      <nav class="navbar navbar-default">
+        <ul class="nav navbar-nav navbar-left">
+          <li><a href="index.html">Home</a></li>
+          <li class="dropdown active">
+            <a href="#" class="text-muted dropdown-toggle" data-toggle="dropdown" role="presentation" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li class="active"><a href="#">Users</a></li>
+              <li><a href="setup.html">Administrators</a></li>
+            </ul>
+          </li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="https://github.com/frogamic/sansan-messaging-grid">GitHub</a></li>
+          <li><a href="api/index.html">API</a></li>
+        </ul>
+      </nav>
+      <h1>Usage instructions coming soon.</h1>
+    </div> <!-- container -->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
