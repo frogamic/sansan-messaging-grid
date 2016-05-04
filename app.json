@@ -1,18 +1,21 @@
 {
-  "name": "Netrunner Slack",
+  "name": "SanSan Messaging Grid",
   "description": "Replies to Slack messages with details for Netrunner cards.",
   "keywords": [
     "Netrunner",
     "Slack"
   ],
   "repository": "https://github.com/frogamic/sansan-messaging-grid",
+  "website": "https://frogamic.github.io/sansan-messaging-grid",
+  "success_url": "https://frogamic.github.io/sansan-messaging-grid/setup.html#slack-integration",
   "env": {
     "THUMBS_URL": {
       "description": "The url of the server suppling the hexagonal thumbnail images of each card.",
       "value": "http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/"
     },
-    "AUTHORIZED_TEAMS": {
+    "AUTHORIZED_DOMAINS": {
       "description": "A comma delimited list of Slack team domains authorized to use the chatbot.",
+      "required": false,
       "value": ""
     }
   },

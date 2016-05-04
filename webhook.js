@@ -28,9 +28,9 @@ var shorthandRegExp = new RegExp(
 
 var port = process.env.PORT || 3000;
 var token = process.env.TOKEN || '';
-var authorizedTeams = process.env.AUTHORIZED_TEAMS || undefined;
-if (authorizedTeams) {
-    authorizedTeams = authorizedTeams.toLowerCase().split(',');
+var authorizedDomains = process.env.AUTHORIZED_DOMAINS || undefined;
+if (authorizedDomains) {
+    authorizedDomains = authorizedDomains.toLowerCase().split(',');
 }
 var unauthorizedMessage = {text: "Unauthorized access detected.\n:_subroutine: End the run.\n:_subroutine: End the run."};
 
@@ -78,7 +78,7 @@ function findCards(searches) {
 // Listen on the /decklist url for decklist requests.
 app.post('/decklist', (req, res) => {
     if (!req.body.team_domain ||
-            (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+            (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
         return res.json(unauthorizedMessage);
     }
     // Get the decklist url from the query text.
@@ -104,7 +104,7 @@ app.post('/decklist', (req, res) => {
 
 app.post('/', (req, res) => {
     if (!req.body.team_domain ||
-            (authorizedTeams && authorizedTeams.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+            (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
         return res.json(unauthorizedMessage);
     }
     var helpResponse = formatting.cardHelpMessage();
