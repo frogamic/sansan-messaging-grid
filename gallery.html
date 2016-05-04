@@ -13,6 +13,9 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="https://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
+    <!-- Custom styles for general page layout -->
+    <link href="page-layout.css" rel="stylesheet">
+
     <!-- Custom styles for featurettes -->
     <link href="featurette.css" rel="stylesheet">
 
@@ -23,9 +26,11 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body>
-    <div class="container">
-      <nav class="navbar navbar-default">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
         <ul class="nav navbar-nav navbar-left">
           <li><a href="index.html">Home</a></li>
           <li class="dropdown">
@@ -39,7 +44,10 @@
           <li><a href="https://github.com/frogamic/sansan-messaging-grid">GitHub</a></li>
           <li><a href="api/index.html">API</a></li>
         </ul>
-      </nav>
+      </div> <!-- container -->
+    </nav>
+
+    <div class="container">
 
       <h1 class="text-center featurette-heading">SanSan Messaging Grid in play</h1>
 
@@ -62,8 +70,8 @@
       <a name="feature2"></a>
       <div class="row featurette">
         <div class="col-md-7 col-md-push-5">
-          <h2 class="featurette-heading">View decklists, directly in Slack. <span class="text-muted">Easily pull that decklist you're thinking about bringing on Saturday into your conversation.</span></h2>
-          <p class="lead">SanSan Messaging Grid is fully aware of the NAPD Most Wanted List, and can calculate the influence usage of Alliance cards in decklists.</p>
+          <h2 class="featurette-heading">View decklists, directly in Slack. <span class="text-muted">Easily pull that decklist you brought last night into your conversation.</span></h2>
+          <p class="lead">SanSan Messaging Grid is fully aware of the NAPD Most Wanted List, and can calculate the influence cost of Alliance cards in decklists.</p>
         </div>
         <div class="col-md-5 col-md-pull-7">
           <img class="featurette-image img-responsive center-block" src="images/feature2.png" alt="Decklist being displayed on Slack">
@@ -102,7 +110,7 @@
       <footer class="footer">
         <p class="text-center">Website built with <a href="https://getbootstrap.com">Bootstrap</a> and hosted on <a href="https://pages.github.com">GitHub Pages</a>.</p>
       </footer>
-      
+
     </div> <!-- container -->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

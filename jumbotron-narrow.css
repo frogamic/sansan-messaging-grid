@@ -1,6 +1,5 @@
 /* Space out content a bit */
 body {
-  padding-top: 20px;
   padding-bottom: 20px;
 }
 
@@ -10,23 +9,6 @@ body {
 .footer {
   padding-right: 15px;
   padding-left: 15px;
-}
-
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
-}
-
-/* Customize container */
-@media (min-width: 768px) {
-  .container {
-    max-width: 1440px;
-  }
-}
-.container-narrow > hr {
-  margin: 30px 0;
 }
 
 /* Main marketing message and sign up button */

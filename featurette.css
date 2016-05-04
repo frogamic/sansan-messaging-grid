@@ -19,11 +19,12 @@ body {
 .footer {
   padding-right: 15px;
   padding-left: 15px;
+  border-top: none;
 }
 
 /* Custom page footer */
 .footer {
-  padding-top: 19px;
+  padding-top: 0px;
   color: #777;
 }
 
@@ -31,10 +32,6 @@ body {
   .featurette-heading {
     font-size: 50px;
   }
-}
-
-.container-narrow > hr {
-  margin: 30px 0;
 }
 
 @media (min-width: 992px) {
