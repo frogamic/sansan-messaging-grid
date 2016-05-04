@@ -13,8 +13,20 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="https://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="jumbotron-narrow.css" rel="stylesheet">
+    <!-- Custom styles for general page layout -->
+    <link href="page-layout.css" rel="stylesheet">
+    
+    <style>
+      .panel-content dt {
+        padding-left: 10px;
+      }
+      .panel-content dd {
+        padding-left: 30px;
+      }
+      section {
+        padding-top: 20px;
+      }
+    </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,13 +35,13 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
-    <div class="container">
-      <nav class="navbar navbar-default">
+  <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
         <ul class="nav navbar-nav navbar-left">
           <li><a href="index.html">Home</a></li>
           <li class="dropdown active">
-            <a href="#" class="text-muted dropdown-toggle" data-toggle="dropdown" role="presentation" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="presentation" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="usage.html">Users</a></li>
               <li class="active"><a href="#">Administrators</a></li>
@@ -39,8 +51,169 @@
           <li><a href="https://github.com/frogamic/sansan-messaging-grid">GitHub</a></li>
           <li><a href="api/index.html">API</a></li>
         </ul>
-      </nav>
-      <h1>Setup instructions coming soon.</h1>
+      </div> <!-- container -->
+    </nav>
+
+    <div class="container">
+      <div id="heading" class="jumbotron">
+        <h1 class="text-center page-header">Install SanSan Messaging Grid in your server</h1>
+        <p class="lead">SanSan Messaging Grid is designed to be used with <a href="https://heroku.com">Heroku</a>, but it should work on any server running Node.js 5.1.1 or higher.</p>
+        <p class="text-muted">Note that Slack requires all communication with the server to be over HTTPS.</p>
+      </div><!-- jumbotron -->
+      <div class="row">
+        <div class="col-md-10" role="main">
+          
+          <section id="heroku-deploy">
+            <h1>Deploy to Heroku</h1>
+            <p class="lead">Deploy SanSan Messaging Grid to Heroku with one click:</p>
+            <p class="text-center">
+              <a href="https://heroku.com/deploy?template=https://github.com/frogamic/sansan-messaging-grid/tree/deploy">
+                <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku">
+              </a>
+            </p>
+            <p class="lead">This will create a new Node.js app running on Heroku's server. Take note of the URL of your app, you'll need it later.</p>
+          </section>
+          
+          <section id="alternative-hosting">
+            <h1>Alternative Hosting</h1>
+            <p class="lead">
+              If you choose not to use Heroku, or you wish to deploy manually, you can pull the code from GitHub and host it yourself.
+              Run the following command from a directory of your choice:
+            </p><p class="text-center">
+              <kbd class="lead">git clone github.com/frogamic/sansan-messaging-grid -b deploy</kbd>
+            </p>
+            <p class="lead">This will download the <code>deploy</code> branch of the repository to your local computer.</p>
+              <div class="lead alert alert-warning" role="alert">
+                It is recommended to use the <code>deploy</code> branch since active development takes place on the <code>master</code> branch and stability is not guaranteed.
+              </div>
+          </section>
+          
+          <section id="slack-integration">
+            <h1>Add Slack Integrations</h1>
+            <p class="lead">Once SanSan Messaging Grid is deployed and running, you must configure it as a Slack integration:</p>
+            <p class="lead">Navigate to <a href="https://slack.com/apps/manage/custom-integrations">https://slack.com/apps/manage/custom-integrations</a></p>
+            <p class="lead">From this page, add the following integrations:</p>
+            <div id="outgoing-webhooks" class="lead alert alert-info">
+              Triggers allow users to refer to card or deck information and have it posted publicly in the channel.
+            </div>
+            <div class="panel panel-default">
+              <div class="lead panel-heading"><h3>Outgoing WebHook</h3></div>
+              <div class="lead panel-content"><dl>
+                <dt>Channel:</dt>
+                <dd><kbd>Any</kbd></dd>
+                <dt>Trigger Word(s):</dt>
+                <dd><kbd>nrdb:</kbd> <em class="text-muted">You can change this if you prefer</em></dd>
+                <dt>URL(s):</dt>
+                <dd><kbd>[your app URL from earlier]</kbd></dd>
+                <dt>Token:</dt>
+                <dd><em>Not used</em></dd>
+                <dt>Descriptive Label:</dt>
+                <dd><kbd>NRDB Card trigger</kbd></dd>
+                <dt>Customize Name:</dt>
+                <dd><em class="text-muted">This is the username that the card information is posted to the channel by.<br>Our channel uses</em> <kbd>Dorm Computer</kbd></dd>
+              </dl></div>
+            </div><!-- panel -->
+            <div class="panel panel-default">
+              <div class="lead panel-heading"><h3>Outgoing WebHook</h3></div>
+              <div class="lead panel-content"><dl>
+                <dt>Channel:</dt>
+                <dd><kbd>Any</kbd></dd>
+                <dt>Trigger Word(s):</dt>
+                <dd><kbd>deck:,decklist:</kbd> <em class="text-muted">pick any number of commands seperated by commas</em></dd>
+                <dt>URL(s):</dt>
+                <dd><kbd>[your app URL from earlier]/decklist</kbd></dd>
+                <dt>Token:</dt>
+                <dd><em>Not used</em></dd>
+                <dt>Descriptive Label:</dt>
+                <dd><kbd>NRDB decklist trigger</kbd></dd>
+                <dt>Customize Name:</dt>
+                <dd><em class="text-muted">You can choose</em></dd>
+              </dl></div>
+            </div><!-- panel -->
+            <div class="panel panel-default">
+              <div class="lead panel-heading"><h3>Outgoing WebHook</h3></div>
+              <div class="lead panel-content"><dl>
+                <dt>Channel:</dt>
+                <dd><em>You must add this integration once for each channel that you want to have</em> <code>[inline]</code> <em>searching</em></dd>
+                <dt>Trigger Word(s):</dt>
+                <dd><em>Leave blank</em></dd>
+                <dt>URL(s):</dt>
+                <dd><kbd>[your app URL from earlier]</kbd></dd>
+                <dt>Token:</dt>
+                <dd><em>Not used</em></dd>
+                <dt>Descriptive Label:</dt>
+                <dd><kbd>NRDB inline card search</kbd></dd>
+                <dt>Customize Name:</dt>
+                <dd><em class="text-muted">Be Creative</em></dd>
+              </dl></div>
+            </div><!-- panel -->
+            <div id="slash-commands" class="lead alert alert-info">
+              Slash commands aren't publicly posted to the channel, nobody can see the search or results but the user that searched.
+            </div>
+            <div class="panel panel-default">
+              <div class="lead panel-heading"><h3>Slash Command</h3></div>
+              <div class="lead panel-content"><dl>
+                <dt>Command:</dt>
+                <dd><kbd>/nrdb</kbd> <em class="text-muted">You can change this one too</em></dd>
+                <dt>URL:</dt>
+                <dd><kbd>[your app URL from earlier]</kbd></dd>
+                <dt>Method:</dt>
+                <dd><kbd>POST</kbd></dd>
+                <dt>Token:</dt>
+                <dd><em>Not used</em></dd>
+                <dt>Customize Name:</dt>
+                <dd><em class="text-muted">Our channel mixes it up a bit and uses</em> <kbd>Exile</kbd> <em class="text-muted">here</em></dd>
+                <dt>Description:</dt>
+                <dd><kbd>Show the text for a card from NetrunnerDB</kbd></dd>
+                <dt>Usage Hint:</dt>
+                <dd><kbd>[Card title or acronym]</kbd></dd>
+                <dt>Descriptive Label:</dt>
+                <dd><kbd>NRDB quiet card command</kbd></dd>
+              </dl></div>
+            </div><!-- panel -->
+            <div class="panel panel-default">
+              <div class="lead panel-heading"><h3>Slash Command</h3></div>
+              <div class="lead panel-content"><dl>
+                <dt>Command:</dt>
+                <dd><kbd>/deck</kbd> <em class="text-muted">Your wish is your command</em></dd>
+                <dt>URL:</dt>
+                <dd><kbd>[your app URL from earlier]/decklist</kbd></dd>
+                <dt>Method:</dt>
+                <dd><kbd>POST</kbd></dd>
+                <dt>Token:</dt>
+                <dd><em>Not used</em></dd>
+                <dt>Customize Name:</dt>
+                <dd><em class="text-muted">You could have your messages express delivered by</em> <kbd>Ken Tenma</kbd>!</dd>
+                <dt>Description:</dt>
+                <dd><kbd>Show a decklist from NetrunnerDB</kbd></dd>
+                <dt>Usage Hint:</dt>
+                <dd><kbd>[Decklist URL or ID number]</kbd></dd>
+                <dt>Descriptive Label:</dt>
+                <dd><kbd>NRDB quiet decklist command</kbd></dd>
+              </dl></div>
+            </div><!-- panel -->
+          </section>
+          
+          <section id="custom-emoji">
+            <h1>Add Custom Emoji</h1>
+            <p class="lead">
+              The final step to create the perfect Android: Netrunner experience on Slack is to add all the Netrunner emoji.
+            </p>
+          </section>
+        </div> <!-- col-md-10 -->
+        
+        <div class="col-md-2" role="complementary">
+          <div id="sidenav" class="hidden-print hidden-xs hidden-sm affix-top">
+            <p><a class="page-scroll" href="#heroku-deploy">Deploy to Heroku</a></p>
+            <p><a class="page-scroll" href="#alternative-hosting">Alternative Hosting</a></p>
+            <p><a class="page-scroll" href="#slack-integration">Slack Integration</a></p>
+            <p style="padding-left: 12px;"><a class="page-scroll" href="#outgoing-webhooks">Outgoing Webhooks</a></p>
+            <p style="padding-left: 12px;"><a class="page-scroll" href="#slash-commands">Slash Commands</a></p>
+            <p><a class="page-scroll" href="#custom-emoji">Custom Emoji</a></p>
+            <p style="padding-top: 0.5em;"><a class="page-scroll text-muted" href="#page-top">Back to top</a></p>
+          </div> <!-- sidenav -->
+        </div> <!-- col-md-2 -->
+      </div> <!-- row -->
 
       <footer class="footer">
         <p class="text-center">Website built with <a href="https://getbootstrap.com">Bootstrap</a> and hosted on <a href="https://pages.github.com">GitHub Pages</a>.</p>
@@ -52,6 +225,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="sidenav.js"></script>
   </body>
 </html>
 
