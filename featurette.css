@@ -1,6 +1,5 @@
 body {
   color: #5a5a5a;
-  padding-top: 20px;
   padding-bottom: 20px;
 }
 
@@ -13,18 +12,27 @@ body {
   font-weight: 300;
   line-height: 1;
   letter-spacing: -1px;
+  margin-top: 20px;
+}
+
+/* Make page heading match feature headings */
+.custom-page-heading {
+  font-size: 60px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-top: 50px;
 }
 
 .header,
 .footer {
   padding-right: 15px;
   padding-left: 15px;
-  border-top: none;
 }
 
-/* Custom page footer */
+/* Increase the footer margin to emulate the dividers */
 .footer {
-  padding-top: 0px;
+  margin-top: 80px;
   color: #777;
 }
 
@@ -36,7 +44,7 @@ body {
 
 @media (min-width: 992px) {
   .featurette-heading {
-    margin-top: 120px;
+    margin-top: 80px;
   }
 }
 
