@@ -13,8 +13,8 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="https://getbootstrap.com/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="jumbotron-narrow.css" rel="stylesheet">
+    <!-- Custom styles for general page layout -->
+    <link href="page-layout.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,13 +23,15 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body>
-    <div class="container">
-      <nav class="navbar navbar-default">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
         <ul class="nav navbar-nav navbar-left">
           <li><a href="index.html">Home</a></li>
           <li class="dropdown active">
-            <a href="#" class="text-muted dropdown-toggle" data-toggle="dropdown" role="presentation" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="presentation" aria-haspopup="true" aria-expanded="false">Tutorials <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li class="active"><a href="#">Users</a></li>
               <li><a href="setup.html">Administrators</a></li>
@@ -39,7 +41,10 @@
           <li><a href="https://github.com/frogamic/sansan-messaging-grid">GitHub</a></li>
           <li><a href="api/index.html">API</a></li>
         </ul>
-      </nav>
+      </div> <!-- container -->
+    </nav>
+
+    <div class="container">
       <h1>Usage instructions coming soon.</h1>
 
       <footer class="footer">
@@ -48,6 +53,8 @@
 
     </div> <!-- container -->
 
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
