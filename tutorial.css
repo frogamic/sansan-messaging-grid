@@ -1,0 +1,14 @@
+/* Indent words and definitions when in panels */
+.panel-content dt {
+  padding-left: 10px;
+}
+
+.panel-content dd {
+    padding-left: 30px;
+}
+
+/* Add some spacing between sections */
+section {
+  padding-top: 20px;
+}
+
