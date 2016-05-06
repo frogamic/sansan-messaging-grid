@@ -10,11 +10,11 @@
   "success_url": "https://frogamic.github.io/sansan-messaging-grid/setup.html#slack-integration",
   "env": {
     "THUMBS_URL": {
-      "description": "The url of the server suppling the hexagonal thumbnail images of each card.",
+      "description": "The url of the server suppling the hexagonal thumbnail images of each card. (Leave the default here unless you want to supply your own thumbnails)",
       "value": "http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/"
     },
     "AUTHORIZED_DOMAINS": {
-      "description": "A comma delimited list of Slack team domains authorized to use the chatbot.",
+      "description": "An optional comma delimited list of Slack team domains (i.e. [you].slack.com) authorized to use your instance of SanSan Messaging Grid.",
       "required": false,
       "value": ""
     }

@@ -1,5 +1,5 @@
 {
-  "name": "netrunner-slack",
+  "name": "sansan-messaging-grid",
   "description": "Slack webhook to respond with Netrunner card details.",
   "version": "0.7.1",
   "author": "Dominic Shelton <frogamic@gmail.com>",
@@ -23,13 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/frogamic/netrunner-slack.git"
+    "url": "git://github.com/frogamic/sansan-messaging-grid.git"
   },
   "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/frogamic/netrunner-slack/issues"
+    "url": "https://github.com/frogamic/sansan-messaging-grid/issues"
   },
-  "homepage": "https://github.com/frogamic/netrunner-slack#readme",
+  "homepage": "https://frogamic.github.io/sansan-messaging-grid",
   "directories": {
     "test": "./tests"
   },
