@@ -3,8 +3,9 @@ body {
   padding-bottom: 20px;
 }
 
+/* Space out the Bootstrap <hr> more */
 .featurette-divider {
-  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+  margin: 40px 0;
 }
 
 /* Thin out the marketing headings */
@@ -46,7 +47,18 @@ body {
 
 @media (min-width: 992px) {
   .featurette-heading {
-    margin-top: 80px;
+    margin-top: 30px;
+  }
+
+  /* Space out the Bootstrap <hr> even more at higher rez */
+  .featurette-divider {
+    margin: 80px 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .featurette-heading {
+    margin-top: 100px;
   }
 }
 
