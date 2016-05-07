@@ -1,10 +1,10 @@
 //jQuery to fix the position of the sidebar while scrolling.
 $(window).scroll(function() {
     if ($(window).scrollTop() > $(".row").offset().top - $(".navbar-fixed-top").height() - 26) {
-        $("#sidenav").css("position", "fixed");
-        $("#sidenav").css("top", $(".navbar-fixed-top").height() + 26)
+        $("#sidenav .nav-stacked").css("position", "fixed");
+        $("#sidenav .nav-stacked").css("top", $(".navbar-fixed-top").height() + 26)
     } else {
-        $("#sidenav").css("position", "static");
+        $("#sidenav .nav-stacked").css("position", "static");
     }
 });
 
@@ -18,3 +18,4 @@ $(function() {
         event.preventDefault();
     });
 });
+

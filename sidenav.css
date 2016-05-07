@@ -1,0 +1,12 @@
+#sidenav ul {
+  white-space: nowrap;
+}
+
+#sidenav li.active a:not(.text-muted){
+  font-weight: bold;
+}
+
+.sidenav-indented {
+  padding-left: 7px;
+}
+
