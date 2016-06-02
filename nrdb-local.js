@@ -184,8 +184,17 @@ function init (cardArray) {
                     console.error('Failed to fetch Most Wanted List: status', response.statusCode);
                     reject (error);
                 } else {
-                    console.log('Fetched Most Wanted List');
-                    resolve(JSON.parse(body).data[0].cards);
+                    // The nrdb api provides several possible MWL rules, choose the latest official one.
+                    var rulesets = JSON.parse(body).data;
+                    var latest = {name: "Empty List", start: "1970-01-01", cards: {}};
+                    rulesets.forEach((rule) => {
+                        if (rule.name.indexOf("Tournament Rules") === 0 &&
+                                Date.parse(latest.start) < Date.parse(rule.start)) {
+                            latest = rule;
+                        }
+                    });
+                    console.log('Using Most Wanted List: ', latest.name);
+                    resolve (latest.cards);
                 }
             });
         });
