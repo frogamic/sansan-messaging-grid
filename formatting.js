@@ -79,7 +79,7 @@ module.exports.cardHelpMessage = cardHelpMessage;
 function cardHelpMessage(command) {
     if (command) {
         return {
-            text: messages.helpCard.replace(/\[command\]/g, command + ' ')
+            text: messages.helpCard.replace(/\[command\]/gi, command + ' ')
         };
     }
     return {
@@ -95,7 +95,7 @@ function cardHelpMessage(command) {
 module.exports.deckHelpMessage = deckHelpMessage;
 function deckHelpMessage(command) {
     return {
-        text: messages.helpDeck.replace(/\[command\]/g, command)
+        text: messages.helpDeck.replace(/\[command\]/gi, command)
     };
 };
 
@@ -335,24 +335,24 @@ function formatText(text) {
     text = text.replace(/\r\n/g, '\n');
 
     // NRDB symbols to Slack emoji.
-    text = text.replace(/\[Credits\]/g, ':_credit:');
-    text = text.replace(/\[Recurring\ Credits\]/g, ':_recurringcredit:');
-    text = text.replace(/\[Click\]/g, ':_click:');
-    text = text.replace(/\ *\[Link\]/g, ' :_link:');
-    text = text.replace(/\[Trash\]/g, ':_trash:');
-    text = text.replace(/\[Subroutine\]/g, ':_subroutine:');
+    text = text.replace(/\[credits\]/gi, ':_credit:');
+    text = text.replace(/\[recurring\ credits\]/gi, ':_recurringcredit:');
+    text = text.replace(/\[click\]/gi, ':_click:');
+    text = text.replace(/\ *\[link\]/gi, ' :_link:');
+    text = text.replace(/\[trash\]/gi, ':_trash:');
+    text = text.replace(/\[subroutine\]/gi, ':_subroutine:');
     // Individual mu emoji for numbers and 'Xmu'
-    text = text.replace(/(\d|X)\s*\[Memory\ Unit\]/gi, function (x) {
+    text = text.replace(/(\d|X)\s*\[memory unit\]/gi, function (x) {
         return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
     });
-    text = text.replace(/\[Memory Unit\]/g, ':_mu:');
+    text = text.replace(/\[memory unit\]/gi, ':_mu:');
 
     // HTML bold to Slack bold
-    text = text.replace(/<strong>/g, '*\u200b');
-    text = text.replace(/<\/strong>/g, '\u200b*');
+    text = text.replace(/<strong>/gi, '*\u200b');
+    text = text.replace(/<\/strong>/gi, '\u200b*');
     // HTML superscript to unicode superscript since Slack markdown doesn't support it.
     text = text.replace(/<sup>(?:\d|X)+<\/sup>/gi, function(x){
-        x = x.replace(/<sup>|<\/sup>/g, '');
+        x = x.replace(/<sup>|<\/sup>/gi, '');
         x = x.replace(/X/i,'ˣ');
         x = x.replace(/\d/g, function(d){
             return ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'][parseInt(d)];
@@ -394,6 +394,6 @@ function getFactionEmoji(faction) {
 
 function getCardNoHitsMessage(text) {
     var r = Math.floor(Math.random() * messages.noCardHits.length);
-    return messages.noCardHits[r].replace(/\[cards\]/g, text);
+    return messages.noCardHits[r].replace(/\[cards\]/gi, text);
 }
 
