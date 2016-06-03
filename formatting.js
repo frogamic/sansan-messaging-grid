@@ -335,8 +335,8 @@ function formatText(text) {
     text = text.replace(/\r\n/g, '\n');
 
     // NRDB symbols to Slack emoji.
-    text = text.replace(/\[credits\]/gi, ':_credit:');
-    text = text.replace(/\[recurring\ credits\]/gi, ':_recurringcredit:');
+    text = text.replace(/\[credits?\]/gi, ':_credit:');
+    text = text.replace(/\[recurring\[\- ]credits?\]/gi, ':_recurringcredit:');
     text = text.replace(/\[click\]/gi, ':_click:');
     text = text.replace(/\ *\[link\]/gi, ' :_link:');
     text = text.replace(/\[trash\]/gi, ':_trash:');
