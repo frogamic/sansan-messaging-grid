@@ -1,13 +1,13 @@
 {
-    "Adam":"#5b510b",
-    "Anarch":"#ff531a",
-    "Apex":"#6f0a0a",
-    "Criminal":"#0066cc",
-    "Haas-Bioroid":"#9039ad",
-    "Jinteki":"#ff0000",
-    "NBN":"#ffb900",
-    "Neutral":"#808080",
-    "Shaper":"#47d147",
-    "Sunny":"#56545b",
-    "Weyland Consortium":"#287c64"
+    "adam":"#5b510b",
+    "anarch":"#ff531a",
+    "apex":"#6f0a0a",
+    "criminal":"#0066cc",
+    "haas-bioroid":"#9039ad",
+    "jinteki":"#ff0000",
+    "nbn":"#ffb900",
+    "neutral":"#808080",
+    "shaper":"#47d147",
+    "sunny":"#56545b",
+    "weyland-consortium":"#287c64"
 }

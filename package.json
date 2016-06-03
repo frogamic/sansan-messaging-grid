@@ -1,7 +1,7 @@
 {
   "name": "sansan-messaging-grid",
   "description": "Slack webhook to respond with Netrunner card details.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "author": "Dominic Shelton <frogamic@gmail.com>",
   "contributors": [],
   "scripts": {
