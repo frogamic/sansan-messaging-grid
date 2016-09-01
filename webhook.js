@@ -56,7 +56,11 @@ function findCards(searches) {
     // Create an array of promises, 1 for each card searched.
     var promises = [];
     searches.forEach((search, i) => {
-        promises[i] = nrdb.getCardByTitle(search);
+        // Clean the search and expand any shorthands.
+        var cleanSearch = search.toLowerCase().replace(shorthandRegExp, (sh) => {
+            return shorthands[sh];
+        });
+        promises[i] = nrdb.getCardByTitle(cleanSearch);
     });
     return new Promise((resolve, reject) => {
         Promise.all(promises).then((cards) => {
@@ -70,7 +74,7 @@ function findCards(searches) {
                     misses.push(searches[i]);
                 }
             });
-            resolve({hits: hits, misses: misses});
+            resolve({hits, misses});
         }, reject);
     });
 }
@@ -146,27 +150,11 @@ app.post('/', (req, res) => {
                 res.json(formatting.deckNoHitsMessage());
             });
         } else {
-            // Clean the searches and expand any shorthands.
-            searches.forEach((search, i) => {
-                searches[i] = search.toLowerCase().replace(shorthandRegExp, (sh) => {
-                    return shorthands[sh];
-                });
-            });
-            // Once the card db is loaded...
-            initpromise.then(() => {
-                // ...search for the card(s)
-                findCards(searches).then((results) => {
-                    var o = formatting.formatCards(results.hits, results.misses);
-                    if (o.text !== '') {
-                        res.json(o);
-                    } else {
-                        // the formatter will return an empty object when nothing is found.
-                        res.json(formatting.cardNoHitsMessage(searches));
-                    }
-                }, (err) => {
-                    console.log(err);
-                    res.sendStatus(500);
-                });
+            findCards(searches).then((results) => {
+                var o = formatting.formatCards(results.hits, results.misses);
+                if (o.text !== '') {
+                    res.json(o);
+                }
             }, (err) => {
                 console.log(err);
                 res.sendStatus(500);
@@ -178,8 +166,10 @@ app.post('/', (req, res) => {
     }
 });
 
-app.listen(port);
-console.info('Express listening on port ' + port);
+initpromise.then(() => {
+    app.listen(port);
+    console.info('Express listening on port ' + port);
+});
 
 module.exports = {app: app, findSearchStrings: findSearchStrings, findCards: findCards};
 

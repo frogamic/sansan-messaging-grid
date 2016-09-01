@@ -107,7 +107,7 @@ function getCardByCode (code) {
             if (cards[code]) {
                 resolve(cards[code]);
             } else {
-                reject(new Error('No hits'));
+                reject();
             }
         });
     });
@@ -141,7 +141,11 @@ function getCardByTitle (text) {
                     var result = cardArray.find(function (e) {
                         return e.title.match(acronym);
                     });
-                    getCardByCode(result.code).then(resolve, reject);
+                    if (results) {
+                        getCardByCode(result.code).then(resolve, reject);
+                    } else {
+                        resolve(undefined);
+                    }
                 }
             });
         }
