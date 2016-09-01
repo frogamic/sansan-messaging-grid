@@ -170,7 +170,7 @@ function init (cardArray) {
                     console.log('Fetched card DB');
                     // Schedule the init method to be called again at the next midnight (NZ time)
                     var date = new Date();
-                    if (date.getUTCHours() > updateTime) {
+                    if (date.getUTCHours() >= updateTime) {
                         date.setDate(date.getDate() + 1);
                     }
                     date.setUTCHours(updateTime);
