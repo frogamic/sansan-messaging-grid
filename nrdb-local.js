@@ -15,6 +15,7 @@ var nrdbMWLURL = 'https://netrunnerdb.com/api/2.0/public/mwl';
 var nrdbDeckURL = 'https://netrunnerdb.com/api/2.0/public/decklist/';
 var nrdbDeckDisplayURL = 'https://netrunnerdb.com/en/decklist/';
 var nrdbCardDisplayURL = 'https://netrunnerdb.com/en/card/';
+var updateTime = 14; // the UTC hour of day to update the card DB daily
 var cards = {};
 var fuzzySearch;
 var scheduledUpdate;
@@ -161,15 +162,22 @@ function init (cardArray) {
                     console.error('Failed to fetch card DB: status', response.statusCode);
                     reject (error);
                 } else {
-                    // Find out when the data expires from the HTTP Header.
-                    var date = new Date(response.headers.expires);
                     cardArray = JSON.parse(body).data;
                     // Cancel any other updates as only the newest is necessary.
                     if (scheduledUpdate) {
                         scheduledUpdate.cancel();
                     }
-                    console.log('Fetched card DB, valid until '+date);
-                    // Schedule the init method to be called again when the data expires.
+                    console.log('Fetched card DB');
+                    // Schedule the init method to be called again at the next midnight (NZ time)
+                    var date = new Date();
+                    if (date.getUTCHours() > updateTime) {
+                        date.setDate(date.getDate() + 1);
+                    }
+                    date.setUTCHours(updateTime);
+                    date.setMinutes(0);
+                    date.setSeconds(0);
+                    date.setMilliseconds(0);
+                    console.log('Scheduling DB update for ' + date.toUTCString());
                     scheduledUpdate = schedule.scheduleJob(date, init);
                     resolve(cardArray);
                 }
