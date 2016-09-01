@@ -15,7 +15,7 @@ var nrdbMWLURL = 'https://netrunnerdb.com/api/2.0/public/mwl';
 var nrdbDeckURL = 'https://netrunnerdb.com/api/2.0/public/decklist/';
 var nrdbDeckDisplayURL = 'https://netrunnerdb.com/en/decklist/';
 var nrdbCardDisplayURL = 'https://netrunnerdb.com/en/card/';
-var updateTime = 14; // the UTC hour of day to update the card DB daily
+var updateTime = process.env.UPDATE_TIME;
 var cards = {};
 var fuzzySearch;
 var scheduledUpdate;
