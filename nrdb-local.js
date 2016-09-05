@@ -232,7 +232,7 @@ function init (cardArray) {
                     cost: card.cost,
                     memoryunits: card.memory_cost,
                     strength: card.strength,
-                    trash: card.trash,
+                    trash: card.trash_cost,
                     advancementcost: card.advancement_cost,
                     minimumdecksize: card.minimum_deck_size,
                     influencelimit: card.influence_limit,
