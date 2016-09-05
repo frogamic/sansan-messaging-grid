@@ -6,7 +6,8 @@
     "haas-bioroid":"#9039ad",
     "jinteki":"#ff0000",
     "nbn":"#ffb900",
-    "neutral":"#808080",
+    "neutral-corp":"#808080",
+    "neutral-runner":"#808080",
     "shaper":"#47d147",
     "sunny":"#56545b",
     "weyland-consortium":"#287c64"
