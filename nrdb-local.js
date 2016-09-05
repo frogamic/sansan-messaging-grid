@@ -230,7 +230,7 @@ function init (cardArray) {
                     factioncost: card.faction_cost,
                     baselink: card.base_link,
                     cost: card.cost,
-                    memoryunits: card.memory_,
+                    memoryunits: card.memory_cost,
                     strength: card.strength,
                     trash: card.trash,
                     advancementcost: card.advancement_cost,
