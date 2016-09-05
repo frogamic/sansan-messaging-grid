@@ -336,16 +336,16 @@ function formatText(text) {
 
     // NRDB symbols to Slack emoji.
     text = text.replace(/\[credits?\]/gi, ':_credit:');
-    text = text.replace(/\[recurring\[\- ]credits?\]/gi, ':_recurringcredit:');
+    text = text.replace(/\[recurring[\- ]credits?\]/gi, ':_recurringcredit:');
     text = text.replace(/\[click\]/gi, ':_click:');
     text = text.replace(/\ *\[link\]/gi, ' :_link:');
     text = text.replace(/\[trash\]/gi, ':_trash:');
     text = text.replace(/\[subroutine\]/gi, ':_subroutine:');
     // Individual mu emoji for numbers and 'Xmu'
-    text = text.replace(/(\d|X)\s*\[memory unit\]/gi, function (x) {
+    text = text.replace(/(\d|X)\s*\[(?:memory unit|mu)\]/gi, function (x) {
         return x.replace(/(.).*/, ':_$1mu:').toLowerCase();
     });
-    text = text.replace(/\[memory unit\]/gi, ':_mu:');
+    text = text.replace(/\[(?:memory unit|mu)\]/gi, ':_mu:');
 
     // HTML bold to Slack bold
     text = text.replace(/<strong>/gi, '*\u200b');
@@ -362,7 +362,7 @@ function formatText(text) {
 
     // Replace nrdb faction symbols with Slack emoji
     text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid)\]/, (a, x) => {
-        return ":_" + getFactionEmoji(x) + ":";
+        return getFactionEmoji(x);
     });
 
     text = text.replace(/&/g, '&amp;');
@@ -389,7 +389,7 @@ function formatLink(text, url) {
 }
 
 function getFactionEmoji(faction) {
-    return ':_' + faction.replace(/\s.*/, '').toLowerCase() + ':';
+    return ':_' + faction.replace(/[\s-].*/, '').toLowerCase() + ':';
 }
 
 function getCardNoHitsMessage(text) {
