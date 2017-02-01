@@ -141,7 +141,7 @@ function getCardByTitle (text) {
                     var result = cardArray.find(function (e) {
                         return e.title.match(acronym);
                     });
-                    if (results) {
+                    if (result) {
                         getCardByCode(result.code).then(resolve, reject);
                     } else {
                         resolve(undefined);
