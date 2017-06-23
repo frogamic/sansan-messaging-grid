@@ -283,7 +283,7 @@ module.exports.formatCards = (cards, missing) => {
             a.pretext += influenceDots(cards[i].factioncost);
         }
         if (cards[i].mwl) {
-            a.pretext += '☆';
+            a.pretext += '☆'.repeat(cards[i].mwl);
         }
         a.pretext += '\n';
         var first = true;
