@@ -61,6 +61,7 @@ var headings = [
 var stats = [
     ['baselink', ' :_link:'],
     ['cost', ':_credit:'],
+    ['rezcost', ':_rez:'],
     ['memoryunits', ' :_mu:'],
     ['strength', ' str'],
     ['trash', ' :_trash:'],
@@ -287,12 +288,6 @@ module.exports.formatCards = (cards, missing) => {
         }
         a.pretext += '\n';
         var first = true;
-        // For some cards, the cost is actually a rez cost, this should be reflected in the emoji.
-        if (cards[i].type === 'Asset' || cards[i].type === 'Upgrade' || cards[i].type === 'ICE') {
-            stats[1][1] = ' :_rez:';
-        } else {
-            stats[1][1] = ':_credit:';
-        }
         // Iterate through the possible card stats adding them to the text where present.
         for (var j = 0; j < stats.length; j++) {
             if (cards[i][stats[j][0]] || cards[i][stats[j][0]] === 0) {

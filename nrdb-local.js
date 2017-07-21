@@ -239,6 +239,14 @@ function init (cardArray) {
                     agendapoints: card.agenda_points,
                     url: nrdbCardDisplayURL + card.code
                 }
+                if (liteCard.type !== "Identity" && !liteCard.cost) {
+                    liteCard.cost = "X";
+                }
+                // For some cards, the cost is actually a rez cost
+                if (liteCard.type === 'Asset' || liteCard.type === 'Upgrade' || liteCard.type === 'ICE') {
+                    liteCard.rezcost = liteCard.cost;
+                    liteCard.cost = null;
+                }
                 // Add a mwl flag to each card on the Most Wanted List.
                 if(mwl[card.code]) {
                     liteCard.mwl = mwl[card.code];
