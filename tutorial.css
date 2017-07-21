@@ -12,3 +12,9 @@ section {
   padding-top: 20px;
 }
 
+/* Make the buttons wrap nicely */
+.btn-responsive {
+  white-space: normal !important;
+  word-wrap: break-word;
+}
+
