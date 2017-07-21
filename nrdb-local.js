@@ -239,7 +239,7 @@ function init (cardArray) {
                     agendapoints: card.agenda_points,
                     url: nrdbCardDisplayURL + card.code
                 }
-                if (liteCard.type !== "Identity" && !liteCard.cost) {
+                if (liteCard.type !== "Identity" && liteCard.cost === null) {
                     liteCard.cost = "X";
                 }
                 // For some cards, the cost is actually a rez cost
