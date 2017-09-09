@@ -345,13 +345,14 @@ function formatText(text) {
     // HTML bold to Slack bold
     text = text.replace(/<strong>/gi, '*\u200b');
     text = text.replace(/<\/strong>/gi, '\u200b*');
+
     // Convert traces into unicode superscripts and format accordingly
-    text = text.replace(/<trace>(trace)\s*(\d+|X)<\/trace>/gi, function(a, x, y){
+    text = text.replace(/<trace>(trace)\s*(\d+|X)<\/trace>/gi, function (a, x, y){
         y = y.replace(/X/i,'ˣ');
-        y = y.replace(/\d/g, function(d){
+        y = y.replace(/\d/g, function (d){
             return ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'][parseInt(d)];
         });
-        return '*\u200b' + x + y + '\u200b*-';
+        return '*\u200b' + x + y + '\u200b*–';
     });
     // Replace nrdb faction symbols with Slack emoji
     text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid|anarch|shaper|criminal)\]/, (a, x) => {
