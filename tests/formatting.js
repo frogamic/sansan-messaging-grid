@@ -60,10 +60,13 @@ describe('Card-text formatting', function() {
               ).to.equal('*\u200bBold Text!!\u200b*');
         done();
     });
-    it('should replace HTML superscript with unicode superscript', function (done) {
+    it('should replace NRDB superscript with unicode superscript', function (done) {
         expect(
-            formatting.formatText('[Subroutine] <strong>Trace<sup>1234567890X</sup></strong>– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1[Credits].')
-              ).to.equal(':_subroutine: *\u200bTrace¹²³⁴⁵⁶⁷⁸⁹⁰ˣ\u200b*– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:_credit:.');
+            formatting.formatText('[Subroutine] <trace>Trace X</trace> If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1[Credits].')
+              ).to.equal(':_subroutine: *\u200bTraceˣ\u200b*– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:_credit:.');
+        expect(
+            formatting.formatText('[Subroutine] <trace>Trace 1234567890</trace> If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1[Credits].')
+              ).to.equal(':_subroutine: *\u200bTrace¹²³⁴⁵⁶⁷⁸⁹⁰\u200b*– If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:_credit:.');
         done();
     });
 });
