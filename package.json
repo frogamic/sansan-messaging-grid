@@ -12,7 +12,7 @@
   "main": "webhook.js",
   "dependencies": {
     "body-parser": "1.14.1",
-    "express": "4.13.3",
+    "express": "4.15.4",
     "foreman": "1.4.1",
     "fuzzysearch-js": "0.2.0",
     "node-schedule": "0.6.0",
