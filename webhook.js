@@ -87,6 +87,8 @@ function findCards(searches) {
 app.use((req, res, next) => {
     if (nrdbLoaded) {
         next();
+    } else {
+        return res.send('');
     }
 });
 
