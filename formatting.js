@@ -45,9 +45,11 @@ var messages = {
         "Search for a decklist by its netrunnerdb link or ID number e.g.\`\`\`[command] 12345, [command] netrunnerdb\u200b.com/en/decklist/17055/example\`\`\`",
     helpCard:
         "Search for a card by (partial) name, approximation or acronym e.g.\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\`",
+    unauthorized: "Unauthorized access detected.\n:_subroutine: End the run.\n:_subroutine: End the run.",
     unavailable:
-        "The NetrunnerDB database is still being built, try again in a minute. If this continues, check NRDB status or contact me via github.com/frogamic/sansan-messaging-grid"
+        "The NetrunnerDB info is still being fetched, try again in a minute or two."
 };
+
 /**
  * @var {string[][]}    headings
  * Headings used in Decklists, in the order they appear in the decklist output.
@@ -101,6 +103,17 @@ function deckHelpMessage(command) {
         text: messages.helpDeck.replace(/\[command\]/gi, command)
     };
 };
+
+/**
+ * Returns a message to the user that the nrdb database is not yet loaded
+ * @return  {string}    A private message to the user stating that nrdb is not yet loaded
+ */
+module.exports.unauthorizedMessage = unauthorizedMessage;
+function unauthorizedMessage() {
+    return {
+        "text": messages.unauthorized
+    }
+}
 
 /**
  * Returns a message to the user that the nrdb database is not yet loaded

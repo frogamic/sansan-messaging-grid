@@ -32,7 +32,6 @@ var authorizedDomains = process.env.AUTHORIZED_DOMAINS || undefined;
 if (authorizedDomains) {
     authorizedDomains = authorizedDomains.toLowerCase().split(',');
 }
-var unauthorizedMessage = {text: "Unauthorized access detected.\n:_subroutine: End the run.\n:_subroutine: End the run."};
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -96,7 +95,7 @@ app.use((req, res, next) => {
 app.post('/decklist', (req, res) => {
     if (!req.body.team_domain ||
             (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
-        return res.json(unauthorizedMessage);
+        return res.json(formatting.unauthorizedMessage());
     }
     // Get the decklist url from the query text.
     var match = req.body.text.match(/(\d+)/);
@@ -122,7 +121,7 @@ app.post('/decklist', (req, res) => {
 app.post('/', (req, res) => {
     if (!req.body.team_domain ||
             (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
-        return res.json(unauthorizedMessage);
+        return res.json(formatting.unauthorizedMessage());
     }
     var helpResponse = formatting.cardHelpMessage();
     var searches = [];
