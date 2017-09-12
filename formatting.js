@@ -44,7 +44,9 @@ var messages = {
     helpDeck:
         "Search for a decklist by its netrunnerdb link or ID number e.g.\`\`\`[command] 12345, [command] netrunnerdb\u200b.com/en/decklist/17055/example\`\`\`",
     helpCard:
-        "Search for a card by (partial) name, approximation or acronym e.g.\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\`"
+        "Search for a card by (partial) name, approximation or acronym e.g.\`\`\`[command]sneakdoor, [command]hiemdal, [command]etf\`\`\`",
+    unavailable:
+        "The NetrunnerDB database is still being built, try again in a minute. If this continues, check NRDB status or contact me via github.com/frogamic/sansan-messaging-grid"
 };
 /**
  * @var {string[][]}    headings
@@ -99,6 +101,18 @@ function deckHelpMessage(command) {
         text: messages.helpDeck.replace(/\[command\]/gi, command)
     };
 };
+
+/**
+ * Returns a message to the user that the nrdb database is not yet loaded
+ * @return  {string}    A private message to the user stating that nrdb is not yet loaded
+ */
+module.exports.unavailableMessage = unavailableMessage;
+function unavailableMessage() {
+    return {
+        "response_type": "ephemeral",
+        "text": messages.unavailable
+    }
+}
 
 /**
  * Generates a message indicating that cards weren't found, by concatenating the names with commas and 'or'

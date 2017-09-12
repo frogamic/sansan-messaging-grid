@@ -37,7 +37,13 @@ var unauthorizedMessage = {text: "Unauthorized access detected.\n:_subroutine: E
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 
-var initpromise = nrdb.init();
+var initPromise = nrdb.init();
+
+var nrdbLoaded = false;
+
+initPromise.then(() => {
+    nrdbLoaded = true;
+});
 
 // Find all search strings enclosed in square brackets in the given text.
 function findSearchStrings(text) {
@@ -166,10 +172,16 @@ app.post('/', (req, res) => {
     }
 });
 
-initpromise.then(() => {
-    app.listen(port);
-    console.info('Express listening on port ' + port);
+app.use((req, res, next) => {
+    if (nrdbLoaded) {
+        next();
+    } else {
+        res.json(formatting.unavailableMessage());
+    }
 });
+
+app.listen(port);
+console.info('Express listening on port ' + port);
 
 module.exports = {app: app, findSearchStrings: findSearchStrings, findCards: findCards};
 
