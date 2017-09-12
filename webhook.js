@@ -37,11 +37,9 @@ var unauthorizedMessage = {text: "Unauthorized access detected.\n:_subroutine: E
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 
-var initPromise = nrdb.init();
-
 var nrdbLoaded = false;
 
-initPromise.then(() => {
+nrdb.init().then(() => {
     nrdbLoaded = true;
 });
 
