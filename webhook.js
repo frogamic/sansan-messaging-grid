@@ -87,8 +87,6 @@ function findCards(searches) {
 app.use((req, res, next) => {
     if (nrdbLoaded) {
         next();
-    } else {
-        res.json(formatting.unavailableMessage());
     }
 });
 
