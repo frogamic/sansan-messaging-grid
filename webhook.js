@@ -85,6 +85,15 @@ function findCards(searches) {
     });
 }
 
+// Intercept requests and check if DB is loaded before responding
+app.use((req, res, next) => {
+    if (nrdbLoaded) {
+        next();
+    } else {
+        res.json(formatting.unavailableMessage());
+    }
+});
+
 // Listen on the /decklist url for decklist requests.
 app.post('/decklist', (req, res) => {
     if (!req.body.team_domain ||
@@ -169,14 +178,6 @@ app.post('/', (req, res) => {
     } else {
         // If the message wasn't a search, send an empty reply.
         res.send('');
-    }
-});
-
-app.use((req, res, next) => {
-    if (nrdbLoaded) {
-        next();
-    } else {
-        res.json(formatting.unavailableMessage());
     }
 });
 
