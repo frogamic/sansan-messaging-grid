@@ -379,7 +379,7 @@ function formatText(text) {
         y = y.replace(/\d/g, function (d){
             return ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'][parseInt(d)];
         });
-        return '*\u200b' + x + y + '\u200b*–';
+        return '*\u200b' + x + y + '\u200b*\u2013';
     });
     // Replace nrdb faction symbols with Slack emoji
     text = text.replace(/\[(jinteki|weyland-consortium|nbn|haas-bioroid|anarch|shaper|criminal)\]/, (a, x) => {
