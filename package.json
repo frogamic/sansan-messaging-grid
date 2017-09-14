@@ -11,12 +11,12 @@
   },
   "main": "webhook.js",
   "dependencies": {
-    "body-parser": "1.14.1",
+    "body-parser": "1.18.1",
     "express": "4.15.4",
-    "foreman": "1.4.1",
+    "foreman": "2.0.0",
     "fuzzysearch-js": "0.2.0",
-    "node-schedule": "0.6.0",
-    "request": "2.67.0"
+    "node-schedule": "1.2.4",
+    "request": "2.81.0"
   },
   "engines": {
     "node": "6.11.1"
