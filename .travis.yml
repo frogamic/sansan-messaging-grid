@@ -1,12 +1,10 @@
 language: node_js
-
 node_js:
-    - "lts/*"
-    - "8"
-
+- lts/*
+- '8'
 notifications:
-    slack: anrnz:BZzSkSYx6AM9EmT9UYLjQJQ4
-
+  slack:
+    rooms:
+      secure: lV/RyrARmqX6DyeudFbNn9Ztvkp8lCCBhyVEnQ+oDoAePey8PxlOgO0IVUBey4c/6VIDa1Ds69CcYzVUOngstsQLxhAoai7Q4HmSz5ZL1S8dZLoqsSKaxMtQa65eghp3lEinkdPcltjOSnf374fyFQDyfDMXuIaZ+gUCIO8l4l5RoJBrZ/LwzNQabK/Cd+bP2IFKBO9ZHGVkjvB2ZqZl9BcqibhdO4RYvgEppyn9yerQigjfQUWg9Bq9XFn9SvCgbjpXxrW8FsxoofisSrJzWx10t2U2XPmlsEobRzoTmKcHj4mYBicwE87DHv2HdmYnDH8el76E42J6bD1Cx8UUcMSSqCev5MGRC5s+/d1hZAPiz1kRG+7lQwfvod5j3ItqYjM0sq0URwE9/vdSwINNDSmk+BTrCSNCx1SxQWc0SxPbiq6jF/NWJZkO0Z2oZF07SQE3JA0MWFczje3bU9Zs6WBCGYWxcIWlDFCZe8g8NAafy/MFDbtWlzITQpL91ptyvv9RtOfqndgbAoLLTkBS2IV9n8x3+IxQSKUxbqSoQ7fM/CPdPYTPjEqA1RMaHFpa4MqQG1mHHO2EQpbh9NZgaJwarJ2t53+OdVHXqP0VLch1Srn7LWt0II+c9issnS40RDkLF/4Jue2q3lurnZRF2XAEg0av49jDqUY9xHuNsqE=
 env:
-    - UPDATE_TIME=0 THUMBS_URL=http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/
-
+- UPDATE_TIME=0 THUMBS_URL=http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/
