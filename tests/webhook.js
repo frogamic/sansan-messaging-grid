@@ -46,6 +46,7 @@ var irrelevantRequest = {
     trigger_word:''
 }
 
+/*
 describe('Post request', function() {
     it('should respond to POST requests', function (done) {
         chai.request(webhook.app)
@@ -137,4 +138,4 @@ describe('Search string finding', function() {
         done();
     });
 });
-
+*/
