@@ -33,6 +33,15 @@ if (authorizedDomains) {
     authorizedDomains = authorizedDomains.toLowerCase().split(',');
 }
 
+var app = express();
+app.use(bodyParser.urlencoded({extended: false}));
+
+var nrdbLoaded = false;
+
+nrdb.init().then(() => {
+    nrdbLoaded = true;
+});
+
 // Find all search strings enclosed in square brackets in the given text.
 function findSearchStrings(text) {
     var cardFinder = new RegExp('.*?\\[(.*?)\\]', 'g'),
@@ -73,35 +82,8 @@ function findCards(searches) {
     });
 }
 
-var app = express();
-
-var domainWhitelist = express.Router().use((req, res, next) => {
-    // Ensure the requester is on the authorized list
-    var teamDomain = req.body.team_domain || "";
-    teamDomain = teamDomain.toLowerCase();
-    if (authorizedDomains && authorizedDomains.indexOf(teamDomain) === -1) {
-        return res.json(formatting.unauthorizedMessage());
-    }
-    next();
-});
-
-// Intercept requests and perform several checks before serving
-var requestValidator = express.Router().use((req, res, next) => {
-    // Reject queries with empty bodies.
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.sendStatus(400);
-    }
-
-    // Ignore automated slackbot messages.
-    if (req.body.user_name === 'slackbot') {
-        return res.send('');
-    }
-    next();
-});
-
-// Send empty response if the index isn't ready.
-var loadedCheck = express.Router().use((req, res, next) => {
-    // TODO Put a nice message here instead
+// Intercept requests and check if DB is loaded before responding
+app.use((req, res, next) => {
     if (nrdbLoaded) {
         next();
     } else {
@@ -109,24 +91,12 @@ var loadedCheck = express.Router().use((req, res, next) => {
     }
 });
 
-
-var nrdbLoaded = false;
-var nrdbLoadFailed = false;
-
-nrdb.init().then(() => {
-    nrdbLoaded = true;
-}, () => {
-    nrdbLoadFailed = true;
-});
-
-// Load middlewares
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(domainWhitelist);
-app.use(requestValidator);
-app.use(loadedCheck);
-
 // Listen on the /decklist url for decklist requests.
 app.post('/decklist', (req, res) => {
+    if (!req.body.team_domain ||
+            (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+        return res.json(formatting.unauthorizedMessage());
+    }
     // Get the decklist url from the query text.
     var match = req.body.text.match(/(\d+)/);
     if (match) {
@@ -149,8 +119,22 @@ app.post('/decklist', (req, res) => {
 });
 
 app.post('/', (req, res) => {
+    if (!req.body.team_domain ||
+            (authorizedDomains && authorizedDomains.indexOf(req.body.team_domain.toLowerCase()) === -1)) {
+        return res.json(formatting.unauthorizedMessage());
+    }
     var helpResponse = formatting.cardHelpMessage();
     var searches = [];
+    // Reject queries with empty bodies.
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.sendStatus(400);
+    }
+
+    // Ignore automated slackbot messages.
+    if (req.body.user_name === 'slackbot') {
+        return res.send('');
+    }
+
     // slash-commands have commands
     if (req.body.command) {
         searches[0] = req.body.text;
