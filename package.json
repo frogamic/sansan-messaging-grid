@@ -7,7 +7,7 @@
   "scripts": {
     "jsdoc": "jsdoc --configure jsdoc.json --verbose",
     "start": "nf start",
-    "test": "istanbul cover _mocha -- tests/*.js"
+    "test": "istanbul cover _mocha"
   },
   "main": "webhook.js",
   "dependencies": {
