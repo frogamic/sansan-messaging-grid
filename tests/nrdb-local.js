@@ -6,7 +6,7 @@ var expect = chai.expect;
 var should = chai.should();
 
 var nrdb = require('../nrdb-local');
-var cards = require('../cards.json'); // Use local copy instead of fetching a fresh copy
+//var cards = require('../cards.json'); // Use local copy instead of fetching a fresh copy
 
 describe('NetrunnerDB object', function () {
     it('should be an object', function (done) {
@@ -23,7 +23,7 @@ describe('NetrunnerDB object', function () {
     });
     it('should be initializable', function () {
         this.timeout(10000);
-        return nrdb.init(cards);
+        return nrdb.init();
     });
     it('should find cards by code', function () {
         return expect(nrdb.getCardByCode('06088'))
