@@ -9,4 +9,4 @@ notifications:
 env:
 - UPDATE_TIME=0 THUMBS_URL=http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/
 after_success:
-- npm coveralls
+- npm run coveralls

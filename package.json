@@ -7,8 +7,8 @@
   "scripts": {
     "jsdoc": "jsdoc --configure jsdoc.json --verbose",
     "start": "nf start",
-    "test": "mocha",
-    "coveralls": "istanbul cover _mocha && istanbul_coveralls"
+    "test": "istanbul cover _mocha",
+    "coveralls": "istanbul_coveralls"
   },
   "main": "webhook.js",
   "dependencies": {
@@ -38,8 +38,8 @@
     "chai": "*",
     "chai-as-promised": "*",
     "chai-http": "*",
+    "coveralls": "*",
     "istanbul": "*",
-    "istanbul-coveralls": "*",
     "jsdoc": "*",
     "minami": "*",
     "mocha": "*"
