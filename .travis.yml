@@ -1,4 +1,13 @@
 language: node_js
+
 node_js:
     - "lts/*"
     - "8"
+
+notifications:
+    slack: anrnz:BZzSkSYx6AM9EmT9UYLjQJQ4
+
+env:
+    - UPDATE_TIME=0
+    - THUMBS_URL=http://nrdb-thumbs.s3-website-us-west-2.amazonaws.com/
+
