@@ -262,7 +262,7 @@ module.exports.formatDecklist = (decklist) => {
     } else {
         o.attachments[0].pretext += '∞•';
     }
-    if (decklist.cards.Identity[0].card.side !== 'Runner') {
+    if (decklist.cards.Identity[0].card.side !== 'runner') {
         o.attachments[0].pretext += ' - ' + agendapoints + ' :_agenda:';
     }
     o.attachments[0].pretext += '\nCards up to ' + getPack(newestCard);
