@@ -13,7 +13,9 @@ var IndexOfFS = require('fuzzysearch-js/js/modules/IndexOfFS');
 var nrdbCardURL = 'https://netrunnerdb.com/api/2.0/public/cards';
 var nrdbMWLURL = 'https://netrunnerdb.com/api/2.0/public/mwl';
 var nrdbDeckURL = 'https://netrunnerdb.com/api/2.0/public/decklist/';
+var nrdbPrivateDeckURL = 'https://netrunnerdb.com/api/2.0/public/deck/';
 var nrdbDeckDisplayURL = 'https://netrunnerdb.com/en/decklist/';
+var nrdbPrivateDeckDisplayURL = 'https://netrunnerdb.com/en/deck/view/';
 var nrdbCardDisplayURL = 'https://netrunnerdb.com/en/card/';
 var updateTime = process.env.UPDATE_TIME | 0;
 var cards = {};
@@ -42,17 +44,30 @@ function createDecklistCard (code, quantity) {
     });
 }
 
-function getDecklist (id) {
+function getDecklist (id, privateDeck) {
     return new Promise (function (resolve, reject) {
-        request(nrdbDeckURL + id, function (error, response, body) {
+        var requestURL = nrdbDeckURL + id;
+        if (privateDeck) {
+            requestURL = nrdbPrivateDeckURL + id;
+        }
+        request(requestURL, function (error, response, body) {
             if (error || response.statusCode !== 200) {
-                return reject(error);
+                if (privateDeck) {
+                    return reject();
+                } else {
+                    return getDecklist(id, true).then(resolve,reject);
+                }
             }
             var decklist = {cards: {}};
             var deck = JSON.parse(body).data[0];
             var promises = [];
-            decklist.name = deck.name;
-            decklist.url = nrdbDeckDisplayURL + id;
+            if (privateDeck) {
+                decklist.name = 'Private decklist';
+                decklist.url = nrdbPrivateDeckDisplayURL + id;
+            } else {
+                decklist.name = deck.name;
+                decklist.url = nrdbDeckDisplayURL + id;
+            }
             decklist.creator = deck.user_name;
             Object.keys(deck.cards).forEach((code) => {
                 promises.push(createDecklistCard(code, deck.cards[code]));
