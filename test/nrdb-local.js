@@ -116,7 +116,7 @@ describe('NetrunnerDB object', function () {
             .that.equals('Private decklist');
     });
 
-    it('should fallback to find valid private shared decklists by ID', function () {
+    it('should fallback to find valid private shared decklists by ID when private is left unspecified', function () {
         this.timeout(20000);
         // https://netrunnerdb.com/en/deck/view/996439
         // Private shared decklist
@@ -124,6 +124,14 @@ describe('NetrunnerDB object', function () {
             .to.eventually.be.a('object')
             .that.has.property('name')
             .that.equals('Private decklist');
+    });
+
+    it('should not fallback to find valid private shared decklists by ID when private is explicitly false', function () {
+        this.timeout(20000);
+        // https://netrunnerdb.com/en/deck/view/996439
+        // Private shared decklist
+        return expect(nrdb.getDecklist('996439', false))
+            .to.eventually.be.rejected;
     });
 
     it('should reject invalid decklists by ID', function () {

@@ -52,7 +52,7 @@ function getDecklist (id, privateDeck) {
         }
         request(requestURL, function (error, response, body) {
             if (error || response.statusCode !== 200) {
-                if (privateDeck) {
+                if (privateDeck !== undefined) {
                     return reject();
                 } else {
                     return getDecklist(id, true).then(resolve,reject);
