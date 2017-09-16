@@ -170,11 +170,11 @@ app.post('/', (req, res) => {
             return res.json(helpResponse);
         }
         // Check if the search appears to be a decklist
-        var match = searches[0].match(/(decklist|deck\/view)\/(\d+)/);
-        if (match) {
-            var privateDeck = match[1].toLowerCase() === 'deck/view';
-            var id = match[2];
-            nrdb.getDecklist(id).then((decklist) => {
+        var deckMatch = searches[0].match(/(decklist|deck\/view)\/(\d+)/);
+        if (deckMatch) {
+            var privateDeck = (deckMatch[1].toLowerCase() === 'deck/view');
+            var id = deckMatch[2];
+            nrdb.getDecklist(id, privateDeck).then((decklist) => {
                 return res.json(formatting.formatDecklist(decklist));
             }, () => {
                 return res.json(formatting.deckNoHitsMessage());
