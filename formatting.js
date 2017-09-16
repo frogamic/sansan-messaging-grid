@@ -194,6 +194,9 @@ module.exports.formatDecklist = (decklist) => {
     // Initialise the newestCard var to a card that is guaranteed to be in every deck.
     var newestCard = parseInt(decklist.cards.Identity[0].card.code);
     o.text = formatTitle(decklist.name, decklist.url);
+    if (decklist.privateDeck) {
+        o.text += ' _\u200b(private)\u200b_';
+    }
     o.text += ' - _\u200b' + decklist.creator + '\u200b_';
     for (let column in headings) {
         // Create the columns as Slack 'fields'.
