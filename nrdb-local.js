@@ -66,11 +66,11 @@ function getDecklist (id, privateDeck) {
             var decklist = {cards: {}};
             var deck = JSON.parse(body).data[0];
             var promises = [];
+            decklist.name = deck.name;
+            decklist.privateDeck = privateDeck;
             if (privateDeck) {
-                decklist.name = 'Private decklist';
                 decklist.url = nrdbPrivateDeckDisplayURL + id;
             } else {
-                decklist.name = deck.name;
                 decklist.url = nrdbDeckDisplayURL + id;
             }
             decklist.creator = deck.user_name;
