@@ -137,9 +137,24 @@ describe('NetrunnerDB object', function () {
     it('should reject invalid decklists by ID', function () {
         this.timeout(10000);
         // https://netrunnerdb.com/en/decklist/2
+        // doesn't exist - 404
+        return expect(nrdb.getDecklist('2', false))
+            .to.eventually.be.rejected;
+    });
+
+    it('should reject invalid private decklists by ID', function () {
+        this.timeout(10000);
         // https://netrunnerdb.com/en/deck/view/2
         // doesn't exist - 404
-        return expect(nrdb.getDecklist('2'))
+        return expect(nrdb.getDecklist('2', true))
+            .to.eventually.be.rejected;
+    });
+
+    it('should reject private unshared decklists', function () {
+        this.timeout(10000);
+        // https://netrunnerdb.com/en/deck/view/996435
+        // it is private and not shared, will 302 redirect
+        return expect(nrdb.getDecklist('996435', true))
             .to.eventually.be.rejected;
     });
 

@@ -46,11 +46,16 @@ function createDecklistCard (code, quantity) {
 
 function getDecklist (id, privateDeck) {
     return new Promise (function (resolve, reject) {
-        var requestURL = nrdbDeckURL + id;
-        if (privateDeck) {
-            requestURL = nrdbPrivateDeckURL + id;
+        var requestParam = {
+            url: nrdbDeckURL + id,
+            // NRDB will redirect to authentication page if trying to view
+            // private non-shared decks
+            followRedirect: false
         }
-        request(requestURL, function (error, response, body) {
+        if (privateDeck) {
+            requestParam.url = nrdbPrivateDeckURL + id;
+        }
+        request(requestParam, function (error, response, body) {
             if (error || response.statusCode !== 200) {
                 if (privateDeck !== undefined) {
                     return reject();
