@@ -133,17 +133,17 @@ app.post('/decklist', (req, res) => {
         var id = match[1];
         nrdb.getDecklist(id).then((decklist) => {
             // The decklist was found
-            res.json(formatting.formatDecklist(decklist));
+            return res.json(formatting.formatDecklist(decklist));
         }, () => {
             // The decklist wasn't found
-            res.json(formatting.deckNoHitsMessage());
+            return res.json(formatting.deckNoHitsMessage());
         });
     } else {
         // Search was invalid, display help
         if (req.body.trigger_word) {
-            res.json(formatting.deckHelpMessage(req.body.trigger_word));
+            return res.json(formatting.deckHelpMessage(req.body.trigger_word));
         } else {
-            res.json(formatting.deckHelpMessage(req.body.command));
+            return res.json(formatting.deckHelpMessage(req.body.command));
         }
     }
 });
@@ -153,44 +153,46 @@ app.post('/', (req, res) => {
     var searches = [];
     // slash-commands have commands
     if (req.body.command) {
-        searches[0] = req.body.text;
+        searches.push(req.body.text);
         helpResponse = formatting.cardHelpMessage(req.body.command);
     // other public commands have triggers
     } else if (req.body.trigger_word) {
-        searches[0] = req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), '');
+        // Remove the trigger word and any whitespace from the start of the text
+        searches.push(req.body.text.replace(new RegExp('^' + req.body.trigger_word + '\\s*', 'i'), ''));
         helpResponse = formatting.cardHelpMessage(req.body.trigger_word);
     } else {
         // Otherwise look for strings enclosed in square brackets.
         searches = findSearchStrings(req.body.text);
     }
-    if (searches && searches.length > 0) {
+    if (searches.length > 0) {
         // Respond to a call for help.
         if (searches[0].toLowerCase() === "help" && searches.length === 1) {
             return res.json(helpResponse);
         }
         // Check if the search appears to be a decklist
-        var match = searches[0].match(/(?:netrunnerdb.com\/\w\w\/decklist\/)(\d+)/);
+        var match = searches[0].match(/(decklist|deck\/view)\/(\d+)/);
         if (match) {
-            var id = match[1];
+            var privateDeck = match[1].toLowerCase() === 'deck/view';
+            var id = match[2];
             nrdb.getDecklist(id).then((decklist) => {
-                res.json(formatting.formatDecklist(decklist));
+                return res.json(formatting.formatDecklist(decklist));
             }, () => {
-                res.json(formatting.deckNoHitsMessage());
+                return res.json(formatting.deckNoHitsMessage());
             });
         } else {
             findCards(searches).then((results) => {
                 var o = formatting.formatCards(results.hits, results.misses);
                 if (o.text !== '') {
-                    res.json(o);
+                    return res.json(o);
                 }
             }, (err) => {
                 console.log(err);
-                res.sendStatus(500);
+                return res.sendStatus(500);
             });
         }
     } else {
         // If the message wasn't a search, send an empty reply.
-        res.send('');
+        return res.send('');
     }
 });
 
