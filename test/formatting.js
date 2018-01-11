@@ -70,6 +70,12 @@ describe('Card-text formatting', function() {
               ).to.equal(':_subroutine: *\u200bTrace¹²³⁴⁵⁶⁷⁸⁹⁰\u200b*\u2013 If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware with a cost of 1:_credit:.');
         done();
     });
+    it('should replace errata tags with italics and exclamation', function (done) {
+        expect(
+            formatting.formatText('This card costs 0 influence if you have 50 or more cards in your deck. When your turn begins, you may shuffle 1 card from Archives into R&D. <errata>Errata from FAQ 3.1</errata>')
+              ).to.equal('This card costs 0 influence if you have 50 or more cards in your deck. When your turn begins, you may shuffle 1 card from Archives into R&amp;D. :_exclamation:\u200b_\u200bErrata from FAQ 3.1\u200b_');
+        done();
+    });
 });
 
 
