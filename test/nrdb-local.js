@@ -112,8 +112,7 @@ describe('NetrunnerDB object', function () {
         // Private shared decklist
         return expect(nrdb.getDecklist('996439', true))
             .to.eventually.be.a('object')
-            .that.has.property('name')
-            .that.equals('Core 2.0 PE');
+            .that.has.property('name');
     });
 
     it('should fallback to find valid private shared decklists by ID when private is left unspecified', function () {
@@ -122,8 +121,7 @@ describe('NetrunnerDB object', function () {
         // Private shared decklist
         return expect(nrdb.getDecklist('996439'))
             .to.eventually.be.a('object')
-            .that.has.property('name')
-            .that.equals('Core 2.0 PE');
+            .that.has.property('name');
     });
 
     it('should not fallback to find valid private shared decklists by ID when private is explicitly false', function () {
