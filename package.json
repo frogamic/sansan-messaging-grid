@@ -41,7 +41,7 @@
     "istanbul": "*",
     "jsdoc": "*",
     "minami": "*",
-    "mocha": "*"
+    "mocha": "3.5.3"
   },
   "keywords": [
     "Netrunner",
