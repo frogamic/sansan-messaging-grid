@@ -377,7 +377,7 @@ function formatText(text) {
     text = text.replace(/<\/strong>/gi, '\u200b*');
 
     // Errata tags
-    text = text.replace(/<errata>/gi, ':_exclamation:\u200b_\u200b');
+    text = text.replace(/<errata>/gi, ':_exclamation: _\u200b');
     text = text.replace(/<\/errata>/gi, '\u200b_');
 
     // Convert traces into unicode superscripts and format accordingly

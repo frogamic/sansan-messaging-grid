@@ -73,7 +73,7 @@ describe('Card-text formatting', function() {
     it('should replace errata tags with italics and exclamation', function (done) {
         expect(
             formatting.formatText('This card costs 0 influence if you have 50 or more cards in your deck. When your turn begins, you may shuffle 1 card from Archives into R&D. <errata>Errata from FAQ 3.1</errata>')
-              ).to.equal('This card costs 0 influence if you have 50 or more cards in your deck. When your turn begins, you may shuffle 1 card from Archives into R&amp;D. :_exclamation:\u200b_\u200bErrata from FAQ 3.1\u200b_');
+              ).to.equal('This card costs 0 influence if you have 50 or more cards in your deck. When your turn begins, you may shuffle 1 card from Archives into R&amp;D. :_exclamation: _\u200bErrata from FAQ 3.1\u200b_');
         done();
     });
 });
