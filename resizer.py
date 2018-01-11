@@ -43,23 +43,23 @@ def worker ():
             if card["type_code"] == "ice":
                 im = im.transpose(Image.ROTATE_270)
 
-            im.width, im.height = im.size
-            mask = Image.new("L", (im.width * 3, im.height * 3), 0)
-            mask.width, mask.height = mask.size
+            width, height = im.size
+            mask = Image.new("L", (width * 3, height * 3), 0)
+            mwidth, mheight = mask.size
             hexagon = [
-                    (0, mask.height / 2),
-                    (mask.width / 4, 0),
-                    (mask.width / 4 * 3, 0),
-                    (mask.width, mask.height / 2),
-                    (mask.width / 4 * 3, mask.height),
-                    (mask.width / 4, mask.height)]
+                    (0, mheight / 2),
+                    (mwidth / 4, 0),
+                    (mwidth / 4 * 3, 0),
+                    (mwidth, mheight / 2),
+                    (mwidth / 4 * 3, mheight),
+                    (mwidth / 4, mheight)]
             maskdraw = ImageDraw.Draw(mask)
             maskdraw.polygon(hexagon, fill = 255);
             mask = mask.resize(im.size, Image.ANTIALIAS)
 
-            output = Image.new("RGBA", (im.width, im.width), color = (255, 255, 255, 0))
+            output = Image.new("RGBA", (width, width), color = (255, 255, 255, 0))
             output.paste(im,
-                box = (0, round((1 - (math.sqrt(3)/2)) / 2 * im.width)),
+                box = (0, round((1 - (math.sqrt(3)/2)) / 2 * width)),
                 mask = mask)
 
             output.save(OUTPUT_FOLDER + card["code"] + ".png", compress_level=9)
